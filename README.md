@@ -2,8 +2,6 @@
 
 **Iniciacao Cientifica – IFSP Campus Campos do Jordao (2025)**
 
----
-
 [Switch to English version](#english-version)
 
 ---
@@ -23,8 +21,6 @@ Este repositorio documenta minha Iniciacao Cientifica, que aplica tecnicas de In
 - Dados originais da NASA Exoplanet Archive
 - Dados tratados para cada etapa da classificacao
 - Demais arquivos pertinentes ao projeto
-
----
 
 ## Informacoes tecnicas
 
@@ -76,8 +72,6 @@ Este projeto utilizou dados do **NASA Exoplanet Archive**, operado pelo Californ
 
 *This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.*
 
----
-
 ## Contribuicoes e sugestoes
 
 Os codigos sao **open source** e podem ser usados como base para novos projetos.
@@ -86,8 +80,6 @@ Voce esta convidada(o) a contribuir! Sugestoes, criticas ou duvidas sao muito be
 
 **devbeatrizhelena@gmail.com**
 
----
-
 ### Nota da autora
 
 *Sou aluna do curso de Tecnologia em Analise e Desenvolvimento de Sistemas. Se houver consideracoes sobre essa ou outras areas envolvidas no projeto, fique a vontade para me contatar. Estou sempre aberta a aprender e melhorar!*
@@ -95,12 +87,9 @@ Voce esta convidada(o) a contribuir! Sugestoes, criticas ou duvidas sao muito be
 ---
 
 # English Version
-
 ## AI for Exoplanet Classification and Similarity to Earth
 
 **Undergraduate Research – IFSP Campus Campos do Jordao (2025)**
-
----
 
 [Switch to Portuguese version](#uso-de-ia-para-classificacao-de-exoplanetas-e-similaridade-com-a-terra)
 
@@ -112,8 +101,6 @@ This repository documents my undergraduate research project, which applies Artif
 
 > **Current status:** The project is undergoing code and documentation revisions. The similarity-to-Earth analysis and complete documentation will be available soon.
 
----
-
 ## What you'll find here
 
 - Python scripts (.py) and notebooks (.ipynb)
@@ -121,8 +108,6 @@ This repository documents my undergraduate research project, which applies Artif
 - Raw data from NASA Exoplanet Archive
 - Processed data for each classification stage
 - Other relevant project files
-
----
 
 ## Technical information
 
@@ -165,13 +150,9 @@ This repository documents my undergraduate research project, which applies Artif
 - No inference techniques were used to fill missing parameters.
 - Only exoplanets with all five parameters available and uncertainty below 50% were considered.
 
----
-
 ## Acknowledgment
 
 This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
-
----
 
 ## Contributions and suggestions
 
@@ -181,7 +162,6 @@ You are invited to contribute! Suggestions, feedback, and questions are very wel
 
 **devbeatrizhelena@gmail.com**
 
----
 
 ### Author's note
 
