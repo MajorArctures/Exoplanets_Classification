@@ -12,9 +12,8 @@ Este repositorio documenta minha Iniciacao Cientifica, que aplica tecnicas de In
 
 > **Status atual:** O projeto esta passando por revisoes de codigo e documentacao. A analise de similaridade com a Terra e a documentacao completa serao disponibilizadas em breve.
 
----
 
-## O que voce encontra aqui
+### O que voce encontra aqui
 
 - Scripts em Python (.py) e notebooks (.ipynb)
 - Imagens geradas com Matplotlib
@@ -22,7 +21,7 @@ Este repositorio documenta minha Iniciacao Cientifica, que aplica tecnicas de In
 - Dados tratados para cada etapa da classificacao
 - Demais arquivos pertinentes ao projeto
 
-## Informacoes tecnicas
+### Informacoes tecnicas
 
 | Item | Descricao |
 |------|------------|
@@ -32,7 +31,7 @@ Este repositorio documenta minha Iniciacao Cientifica, que aplica tecnicas de In
 | **Bibliotecas principais** | NumPy, Pandas, Scikit-Learn, Matplotlib |
 
 
-## Metodologia
+### Metodologia
 
 ### Parametros utilizados para classificacao
 
@@ -60,19 +59,19 @@ Este repositorio documenta minha Iniciacao Cientifica, que aplica tecnicas de In
    - Comparacao percentual entre os parametros da Terra e os exoplanetas classificados como terrestres
 
 
-## Observacoes importantes
+### Observacoes importantes
 
 - Nao foram utilizadas tecnicas de inferencia para preenchimento de parametros faltantes.
 - Foram considerados apenas os exoplanetas com todos os cinco parametros disponiveis e incerteza inferior a 50%.
 
 
-## Agradecimento (Acknowledgment)
+### Agradecimento (Acknowledgment)
 
 Este projeto utilizou dados do **NASA Exoplanet Archive**, operado pelo California Institute of Technology sob contrato com a National Aeronautics and Space Administration dentro do Exoplanet Exploration Program.
 
 *This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.*
 
-## Contribuicoes e sugestoes
+### Contribuicoes e sugestoes
 
 Os codigos sao **open source** e podem ser usados como base para novos projetos.
 
@@ -80,7 +79,7 @@ Voce esta convidada(o) a contribuir! Sugestoes, criticas ou duvidas sao muito be
 
 **devbeatrizhelena@gmail.com**
 
-### Nota da autora
+#### Nota da autora
 
 *Sou aluna do curso de Tecnologia em Analise e Desenvolvimento de Sistemas. Se houver consideracoes sobre essa ou outras areas envolvidas no projeto, fique a vontade para me contatar. Estou sempre aberta a aprender e melhorar!*
 
@@ -101,7 +100,7 @@ This repository documents my undergraduate research project, which applies Artif
 
 > **Current status:** The project is undergoing code and documentation revisions. The similarity-to-Earth analysis and complete documentation will be available soon.
 
-## What you'll find here
+### What you'll find here
 
 - Python scripts (.py) and notebooks (.ipynb)
 - Images generated with Matplotlib
@@ -109,7 +108,7 @@ This repository documents my undergraduate research project, which applies Artif
 - Processed data for each classification stage
 - Other relevant project files
 
-## Technical information
+### Technical information
 
 | Item | Description |
 |------|-------------|
@@ -118,7 +117,7 @@ This repository documents my undergraduate research project, which applies Artif
 | **Dataset** | NASA Exoplanet Archive – Planetary System Composite Data (PScompPars) – July 2025 |
 | **Main libraries** | NumPy, Pandas, Scikit-Learn, Matplotlib |
 
-## Methodology
+### Methodology
 
 ### Parameters used for classification
 
@@ -145,16 +144,16 @@ This repository documents my undergraduate research project, which applies Artif
 3. **Similarity-to-Earth analysis** *(under revision)*
    - Percentage comparison between Earth's parameters and exoplanets classified as terrestrial
 
-## Important notes
+### Important notes
 
 - No inference techniques were used to fill missing parameters.
 - Only exoplanets with all five parameters available and uncertainty below 50% were considered.
 
-## Acknowledgment
+### Acknowledgment
 
 This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
 
-## Contributions and suggestions
+### Contributions and suggestions
 
 The code is **open source** and can be used as a foundation for new projects.
 
@@ -163,6 +162,6 @@ You are invited to contribute! Suggestions, feedback, and questions are very wel
 **devbeatrizhelena@gmail.com**
 
 
-### Author's note
+#### Author's note
 
 *I am a student in the Technology in Systems Analysis and Development program. If you have any considerations regarding this or other related areas, please feel free to contact me. I am always open to learning and improving!*
