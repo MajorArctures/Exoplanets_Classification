@@ -1,3 +1,88 @@
+# English Version
+## AI for Exoplanet Classification and Similarity to Earth
+
+**Undergraduate Research – IFSP Campus Campos do Jordao (2025)**
+
+[Switch to Portuguese version](#uso-de-ia-para-classificacao-de-exoplanetas-e-similaridade-com-a-terra)
+
+---
+
+## About the project
+
+This repository documents my undergraduate research project, which applies Artificial Intelligence techniques to classify exoplanets and identify those most similar to Earth.
+
+> **Current status:** The project is undergoing code and documentation revisions. The similarity-to-Earth analysis and complete documentation will be available soon.
+
+### What you'll find here
+
+- Python scripts (.py) and notebooks (.ipynb)
+- Images generated with Matplotlib
+- Raw data from NASA Exoplanet Archive
+- Processed data for each classification stage
+- Other relevant project files
+
+### Technical information
+
+| Item | Description |
+|------|-------------|
+| **Language** | Python |
+| **Environment** | Google Colab |
+| **Dataset** | NASA Exoplanet Archive – Planetary System Composite Data (PScompPars) – July 2025 |
+| **Main libraries** | NumPy, Pandas, Scikit-Learn, Matplotlib |
+
+### Methodology
+
+### Parameters used for classification
+
+| Parameter | Description |
+|-----------|-------------|
+| `pl_masse` | Planet mass |
+| `pl_rade` | Planet radius |
+| `pl_orbper` | Orbital period (days) |
+| `pl_orbeccen` | Orbital eccentricity |
+| `pl_orbsmax` | Semi-major axis of orbit |
+
+### Stages
+
+1. **Pre-processing**
+   - Standardization with StandardScaler
+   - Removal of exoplanets with missing parameters
+   - Exclusion of values with uncertainty > 50%
+
+2. **Classification**
+   - Hierarchical clustering (unsupervised)
+   - Label Propagation (semi-supervised)
+   - Support Vector Machine – SVM (supervised)
+
+3. **Similarity-to-Earth analysis** *(under revision)*
+   - Percentage comparison between Earth's parameters and exoplanets classified as terrestrial
+
+### Important notes
+
+- No inference techniques were used to fill missing parameters.
+- Only exoplanets with all five parameters available and uncertainty below 50% were considered.
+
+### Acknowledgment
+
+This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
+
+### Contributions and suggestions
+
+The code is **open source** and can be used as a foundation for new projects.
+
+You are invited to contribute! Suggestions, feedback, and questions are very welcome:
+
+**devbeatrizhelena@gmail.com**
+
+- **Prof. Dr. Josivan Pereira da Silva (https://github.com/josivanSilvaCodes)** – Project Tutor
+
+#### Author's note
+
+*I am a student in the Technology in Systems Analysis and Development program. If you have any considerations regarding this or other related areas, please feel free to contact me. I am always open to learning and improving!*
+
+
+
+---
 # Uso de IA para classificacao de exoplanetas e similaridade com a Terra
 
 **Iniciacao Cientifica – IFSP Campus Campos do Jordao (2025)**
@@ -85,83 +170,4 @@ Voce esta convidada(o) a contribuir! Sugestoes, criticas ou duvidas sao muito be
 
 ---
 
-# English Version
-## AI for Exoplanet Classification and Similarity to Earth
 
-**Undergraduate Research – IFSP Campus Campos do Jordao (2025)**
-
-[Switch to Portuguese version](#uso-de-ia-para-classificacao-de-exoplanetas-e-similaridade-com-a-terra)
-
----
-
-## About the project
-
-This repository documents my undergraduate research project, which applies Artificial Intelligence techniques to classify exoplanets and identify those most similar to Earth.
-
-> **Current status:** The project is undergoing code and documentation revisions. The similarity-to-Earth analysis and complete documentation will be available soon.
-
-### What you'll find here
-
-- Python scripts (.py) and notebooks (.ipynb)
-- Images generated with Matplotlib
-- Raw data from NASA Exoplanet Archive
-- Processed data for each classification stage
-- Other relevant project files
-
-### Technical information
-
-| Item | Description |
-|------|-------------|
-| **Language** | Python |
-| **Environment** | Google Colab |
-| **Dataset** | NASA Exoplanet Archive – Planetary System Composite Data (PScompPars) – July 2025 |
-| **Main libraries** | NumPy, Pandas, Scikit-Learn, Matplotlib |
-
-### Methodology
-
-### Parameters used for classification
-
-| Parameter | Description |
-|-----------|-------------|
-| `pl_masse` | Planet mass |
-| `pl_rade` | Planet radius |
-| `pl_orbper` | Orbital period (days) |
-| `pl_orbeccen` | Orbital eccentricity |
-| `pl_orbsmax` | Semi-major axis of orbit |
-
-### Stages
-
-1. **Pre-processing**
-   - Standardization with StandardScaler
-   - Removal of exoplanets with missing parameters
-   - Exclusion of values with uncertainty > 50%
-
-2. **Classification**
-   - Hierarchical clustering (unsupervised)
-   - Label Propagation (semi-supervised)
-   - Support Vector Machine – SVM (supervised)
-
-3. **Similarity-to-Earth analysis** *(under revision)*
-   - Percentage comparison between Earth's parameters and exoplanets classified as terrestrial
-
-### Important notes
-
-- No inference techniques were used to fill missing parameters.
-- Only exoplanets with all five parameters available and uncertainty below 50% were considered.
-
-### Acknowledgment
-
-This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
-
-### Contributions and suggestions
-
-The code is **open source** and can be used as a foundation for new projects.
-
-You are invited to contribute! Suggestions, feedback, and questions are very welcome:
-
-**devbeatrizhelena@gmail.com**
-
-
-#### Author's note
-
-*I am a student in the Technology in Systems Analysis and Development program. If you have any considerations regarding this or other related areas, please feel free to contact me. I am always open to learning and improving!*
