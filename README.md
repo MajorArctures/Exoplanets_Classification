@@ -73,7 +73,7 @@ You are invited to contribute! Suggestions, feedback, and questions are very wel
 
 **devbeatrizhelena@gmail.com**
 
-- **Prof. Dr. Josivan Pereira da Silva (https://github.com/josivanSilvaCodes)** – Project Tutor
+- **Prof. Dr. Josivan Pereira da Silva (https://github.com/josivanSilvaCodes)** – Research supervision and academic guidance
 
 #### Author's note
 
