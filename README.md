@@ -1,4 +1,3 @@
-# English Version
 ## AI for Exoplanet Classification and Similarity to Earth
 
 **Undergraduate Research – IFSP Campus Campos do Jordao (2025)**
