@@ -1,0 +1,92 @@
+Classificação de Exoplanetas
+=============================
+
+Pipeline modular para classificar exoplanetas da base
+*Planetary Systems Composite Parameters* (NASA Exoplanet Archive) como
+**TT** (Tipo Terrestre) ou **NT** (Não Terrestre), combinando pré-processamento
+estatístico, agrupamento hierárquico, propagação de rótulos semi-supervisionada,
+SVM supervisionado e um índice de similaridade com a Terra.
+
+Este projeto é o produto de uma **Iniciação Científica** na área de
+astronomia computacional e aprendizado de máquina.
+
+Visão geral do pipeline
+------------------------
+
+O pipeline consiste em cinco etapas encadeadas, cada uma implementada como
+um módulo Python independente e importável::
+
+   PSCompData.xlsx
+        │  1. preprocessing
+        ▼
+   DFHierarchicalClustering.xlsx  +  ranges_terrestres.json
+        │  2. hierarchical_clustering
+        ▼
+   DFLabelPropagation.xlsx  +  info_proximidade.json
+        │  3. label_propagation
+        ▼
+   DFsvm.xlsx
+        │  4. svm
+        ▼
+   resultados_svm.csv
+
+   (paralelo)  similaridade_exoplanetas_terra.csv  ← usa scaler/df da etapa 1
+
+Início rápido
+--------------
+
+Execução local via linha de comando:
+
+.. code-block:: bash
+
+   pip install -r requirements.txt
+   python run_pipeline.py
+
+Testar diferentes métodos de detecção de outliers:
+
+.. code-block:: bash
+
+   python run_pipeline.py --outlier-method iqr     --out outputs
+   python run_pipeline.py --outlier-method zscore  --out outputs_zscore
+   python run_pipeline.py --outlier-method mad     --out outputs_mad
+   python run_pipeline.py --outlier-method none    --out outputs_none
+
+Execução via Jupyter ou Google Colab:
+
+.. code-block:: bash
+
+   jupyter notebook notebooks/pipeline_completo.ipynb
+
+Os notebooks incluem auto-detecção de ambiente Colab e configuração
+automática. Veja :doc:`colab` para instruções detalhadas.
+
+Conteúdo
+--------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Guias
+
+   introducao
+   uso
+   colab
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Análises metodológicas
+
+   circularidade
+   outliers
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Referência da API
+
+   modules
+
+Índices e busca
+----------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

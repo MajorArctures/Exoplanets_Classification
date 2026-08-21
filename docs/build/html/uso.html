@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Como usar &mdash; Classificação de Exoplanetas v1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=05d536ce"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Executando no Google Colab" href="colab.html" />
+    <link rel="prev" title="Introdução" href="introducao.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Classificação de Exoplanetas
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Guias</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introducao.html">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#contexto-do-projeto">Contexto do projeto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#variaveis-utilizadas">Variáveis utilizadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#definicao-operacional-de-terrestre">Definição operacional de “terrestre”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#fluxo-do-pipeline">Fluxo do pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Como usar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#instalacao">Instalação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#execucao-via-linha-de-comando">Execução via linha de comando</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uso-programatico">Uso programático</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notebooks">Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saidas-geradas">Saídas geradas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="colab.html">Executando no Google Colab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#setup-rapido">Setup rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#celula-de-setup">Célula de setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#baixando-resultados-do-colab">Baixando resultados do Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#dicas">Dicas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Análises metodológicas</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="circularidade.html">Diagnóstico de circularidade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#quantificacao">Quantificação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#interpretacao">Interpretação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#como-executar">Como executar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#validacao-externa">Validação externa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#recomendacao-para-reporte">Recomendação para reporte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Comparação de métodos de detecção de outliers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#resultados">Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#classificacao-do-sistema-solar">Classificação do Sistema Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#discussao-por-que-mad-e-o-mais-agressivo">Discussão: por que MAD é o mais agressivo?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#conclusao-metodologica">Conclusão metodológica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#como-executar-a-comparacao">Como executar a comparação</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referência da API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Referência da API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline">Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.preprocessing">Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#modulo-de-pre-processamento">Módulo de Pré-processamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.carregar_arquivo"><code class="docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.limpeza_dados"><code class="docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.def_lines_limits"><code class="docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.remocao_incertezas"><code class="docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.id_outliers"><code class="docutils literal notranslate"><span class="pre">id_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.rm_outliers"><code class="docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.pca_standard_scaler"><code class="docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.ranges_terrestres"><code class="docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.analise_cargas"><code class="docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.pca_plot_2D"><code class="docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.preprocessing.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.hierarchical_clustering">Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#id23">Módulo Hierarchical Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.hc_application"><code class="docutils literal notranslate"><span class="pre">hc_application()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.plot_dendrogram"><code class="docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.extr_rot_clusters"><code class="docutils literal notranslate"><span class="pre">extr_rot_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.cluster_info_json"><code class="docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.hierarchical_clustering.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.label_propagation">Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#id41">Módulo Label Propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.carregar_info_proximidade"><code class="docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.label_creation"><code class="docutils literal notranslate"><span class="pre">label_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.label_propagation"><code class="docutils literal notranslate"><span class="pre">label_propagation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.plot_pca"><code class="docutils literal notranslate"><span class="pre">plot_pca()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.export_svm_dataset"><code class="docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.label_propagation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.svm">Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#modulo-support-vector-machine-svm">Módulo Support Vector Machine (SVM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.separacao_de_dados"><code class="docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.treinamento_modelo_svm"><code class="docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.avaliacao_modelo"><code class="docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.captura_nomes_exoplanetas"><code class="docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.analise_detalhada_erros"><code class="docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.salvar_resultados_completos"><code class="docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.preparar_features"><code class="docutils literal notranslate"><span class="pre">preparar_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.executar_svm"><code class="docutils literal notranslate"><span class="pre">executar_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.svm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.similaridade_terra">Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#modulo-analise-de-similaridade-terrestre">Módulo Análise de Similaridade Terrestre</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.similaridade_terra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-pipeline.diagnostics">Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#modulo-de-diagnosticos">Módulo de Diagnósticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.diagnostics.relatorio_circularidade"><code class="docutils literal notranslate"><span class="pre">relatorio_circularidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#pipeline.diagnostics.validacao_externa"><code class="docutils literal notranslate"><span class="pre">validacao_externa()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Classificação de Exoplanetas</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Como usar</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/uso.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="como-usar">
+<h1>Como usar<a class="headerlink" href="#como-usar" title="Link para este cabeçalho"></a></h1>
+<section id="instalacao">
+<h2>Instalação<a class="headerlink" href="#instalacao" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>As dependências principais são pandas, numpy, scikit-learn, scipy, matplotlib,
+seaborn e openpyxl.</p>
+</section>
+<section id="execucao-via-linha-de-comando">
+<h2>Execução via linha de comando<a class="headerlink" href="#execucao-via-linha-de-comando" title="Link para este cabeçalho"></a></h2>
+<p>Execução padrão (dataset XLSX + filtro IQR):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_pipeline.py
+</pre></div>
+</div>
+<p>Argumentos disponíveis:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Argumento</p></th>
+<th class="head"><p>Padrão</p></th>
+<th class="head"><p>Descrição</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--data</span> <span class="pre">PATH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data/PSCompData.xlsx</span></code></p></td>
+<td><p>Caminho do dataset (aceita <code class="docutils literal notranslate"><span class="pre">.csv</span></code> ou <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--out</span> <span class="pre">DIR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code></p></td>
+<td><p>Diretório de saída</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--outlier-method</span> <span class="pre">M</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">iqr</span></code></p></td>
+<td><p>Método de detecção de outliers: <code class="docutils literal notranslate"><span class="pre">iqr</span></code>, <code class="docutils literal notranslate"><span class="pre">zscore</span></code>, <code class="docutils literal notranslate"><span class="pre">mad</span></code> ou <code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--outlier-threshold</span> <span class="pre">V</span></code></p></td>
+<td><p>depende do método</p></td>
+<td><p>Threshold customizado (1.5 para IQR, 3.0 para Z-score, 3.5 para MAD)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--show</span></code></p></td>
+<td><p>desligado</p></td>
+<td><p>Abre janelas de plots (útil só em ambiente com display)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--no-outliers</span></code></p></td>
+<td><p>desligado</p></td>
+<td><p>Atalho para <code class="docutils literal notranslate"><span class="pre">--outlier-method</span> <span class="pre">none</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Exemplos:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># execução padrão</span>
+python<span class="w"> </span>run_pipeline.py
+
+<span class="c1"># comparar métodos de detecção de outliers</span>
+python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--outlier-method<span class="w"> </span>zscore<span class="w"> </span>--out<span class="w"> </span>outputs_zscore
+python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--outlier-method<span class="w"> </span>mad<span class="w">    </span>--out<span class="w"> </span>outputs_mad
+
+<span class="c1"># threshold customizado</span>
+python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--outlier-method<span class="w"> </span>iqr<span class="w"> </span>--outlier-threshold<span class="w"> </span><span class="m">2</span>.0
+</pre></div>
+</div>
+</section>
+<section id="uso-programatico">
+<h2>Uso programático<a class="headerlink" href="#uso-programatico" title="Link para este cabeçalho"></a></h2>
+<p>Cada módulo do pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> pode ser importado individualmente:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocessing</span><span class="p">,</span> <span class="n">hierarchical_clustering</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">label_propagation</span><span class="p">,</span> <span class="n">svm</span><span class="p">,</span> <span class="n">similaridade_terra</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">diagnostics</span>
+
+<span class="c1"># Etapa 1</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">main</span><span class="p">(</span>
+    <span class="n">caminho_entrada</span><span class="o">=</span><span class="s2">&quot;data/PSCompData.xlsx&quot;</span><span class="p">,</span>
+    <span class="n">caminho_saida</span><span class="o">=</span><span class="s2">&quot;outputs/DFHierarchicalClustering.xlsx&quot;</span><span class="p">,</span>
+    <span class="n">caminho_rgjson</span><span class="o">=</span><span class="s2">&quot;outputs/ranges_terrestres.json&quot;</span><span class="p">,</span>
+    <span class="n">outlier_method</span><span class="o">=</span><span class="s2">&quot;iqr&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;scaler&quot;</span><span class="p">]</span>
+<span class="n">pca_std</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;pca_std&quot;</span><span class="p">]</span>
+<span class="n">df_sem_outliers</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;df_sem_outliers&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="notebooks">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Link para este cabeçalho"></a></h2>
+<p>Há três notebooks Jupyter no diretório <code class="docutils literal notranslate"><span class="pre">notebooks/</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Notebook</p></th>
+<th class="head"><p>Objetivo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pipeline_completo.ipynb</span></code></p></td>
+<td><p>Executa todas as 5 etapas em sequência com visualizações inline</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">comparacao_outliers.ipynb</span></code></p></td>
+<td><p>Comparação binária: com IQR vs sem filtro</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">comparacao_metodos_outliers.ipynb</span></code></p></td>
+<td><p>Comparação dos 4 métodos (IQR, Z-score, MAD, none) lado a lado</p></td>
+</tr>
+</tbody>
+</table>
+<p>Todos os notebooks incluem uma célula de setup que detecta automaticamente
+se estão sendo executados localmente ou no Google Colab. Veja
+<a class="reference internal" href="colab.html"><span class="doc">Executando no Google Colab</span></a> para os detalhes.</p>
+</section>
+<section id="saidas-geradas">
+<h2>Saídas geradas<a class="headerlink" href="#saidas-geradas" title="Link para este cabeçalho"></a></h2>
+<p>Cada execução produz um diretório com os seguintes arquivos:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Arquivo</p></th>
+<th class="head"><p>Descrição</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DFHierarchicalClustering.xlsx</span></code></p></td>
+<td><p>Dataset após pré-processamento (PCA + padronização)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ranges_terrestres.json</span></code></p></td>
+<td><p>Faixas terrestres convertidas para o espaço padronizado</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DFLabelPropagation.xlsx</span></code></p></td>
+<td><p>Dataset com coluna <code class="docutils literal notranslate"><span class="pre">cluster_hc</span></code> adicionada</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">info_proximidade.json</span></code></p></td>
+<td><p>Cluster mais próximo/distante do centro terrestre</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DFsvm.xlsx</span></code></p></td>
+<td><p>Dataset com colunas <code class="docutils literal notranslate"><span class="pre">cluster_hc</span></code> e <code class="docutils literal notranslate"><span class="pre">label_lp</span></code> (pronto pro SVM)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resultados_svm.csv</span></code></p></td>
+<td><p>Previsões do SVM no conjunto de teste com nomes de planetas</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">similaridade_exoplanetas_terra.csv</span></code></p></td>
+<td><p>Índice de similaridade com a Terra por planeta</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">figs/</span></code></p></td>
+<td><p>Boxplots, dendrograma, scatters PCA, matrizes de confusão</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="introducao.html" class="btn btn-neutral float-left" title="Introdução" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="colab.html" class="btn btn-neutral float-right" title="Executando no Google Colab" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2026, Beatriz — Iniciação Científica.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

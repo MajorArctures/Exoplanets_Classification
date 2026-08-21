@@ -1,0 +1,135 @@
+Como usar
+=========
+
+Instalação
+----------
+
+.. code-block:: bash
+
+   pip install -r requirements.txt
+
+As dependências principais são pandas, numpy, scikit-learn, scipy, matplotlib,
+seaborn e openpyxl.
+
+Execução via linha de comando
+------------------------------
+
+Execução padrão (dataset XLSX + filtro IQR):
+
+.. code-block:: bash
+
+   python run_pipeline.py
+
+Argumentos disponíveis:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 15 55
+
+   * - Argumento
+     - Padrão
+     - Descrição
+   * - ``--data PATH``
+     - ``data/PSCompData.xlsx``
+     - Caminho do dataset (aceita ``.csv`` ou ``.xlsx``)
+   * - ``--out DIR``
+     - ``outputs``
+     - Diretório de saída
+   * - ``--outlier-method M``
+     - ``iqr``
+     - Método de detecção de outliers: ``iqr``, ``zscore``, ``mad`` ou ``none``
+   * - ``--outlier-threshold V``
+     - depende do método
+     - Threshold customizado (1.5 para IQR, 3.0 para Z-score, 3.5 para MAD)
+   * - ``--show``
+     - desligado
+     - Abre janelas de plots (útil só em ambiente com display)
+   * - ``--no-outliers``
+     - desligado
+     - Atalho para ``--outlier-method none``
+
+Exemplos:
+
+.. code-block:: bash
+
+   # execução padrão
+   python run_pipeline.py
+
+   # comparar métodos de detecção de outliers
+   python run_pipeline.py --outlier-method zscore --out outputs_zscore
+   python run_pipeline.py --outlier-method mad    --out outputs_mad
+
+   # threshold customizado
+   python run_pipeline.py --outlier-method iqr --outlier-threshold 2.0
+
+Uso programático
+-----------------
+
+Cada módulo do pacote ``pipeline`` pode ser importado individualmente:
+
+.. code-block:: python
+
+   from pipeline import preprocessing, hierarchical_clustering
+   from pipeline import label_propagation, svm, similaridade_terra
+   from pipeline import diagnostics
+
+   # Etapa 1
+   resultado = preprocessing.main(
+       caminho_entrada="data/PSCompData.xlsx",
+       caminho_saida="outputs/DFHierarchicalClustering.xlsx",
+       caminho_rgjson="outputs/ranges_terrestres.json",
+       outlier_method="iqr",
+   )
+
+   scaler = resultado["scaler"]
+   pca_std = resultado["pca_std"]
+   df_sem_outliers = resultado["df_sem_outliers"]
+
+Notebooks
+---------
+
+Há três notebooks Jupyter no diretório ``notebooks/``:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Notebook
+     - Objetivo
+   * - ``pipeline_completo.ipynb``
+     - Executa todas as 5 etapas em sequência com visualizações inline
+   * - ``comparacao_outliers.ipynb``
+     - Comparação binária: com IQR vs sem filtro
+   * - ``comparacao_metodos_outliers.ipynb``
+     - Comparação dos 4 métodos (IQR, Z-score, MAD, none) lado a lado
+
+Todos os notebooks incluem uma célula de setup que detecta automaticamente
+se estão sendo executados localmente ou no Google Colab. Veja
+:doc:`colab` para os detalhes.
+
+Saídas geradas
+--------------
+
+Cada execução produz um diretório com os seguintes arquivos:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Arquivo
+     - Descrição
+   * - ``DFHierarchicalClustering.xlsx``
+     - Dataset após pré-processamento (PCA + padronização)
+   * - ``ranges_terrestres.json``
+     - Faixas terrestres convertidas para o espaço padronizado
+   * - ``DFLabelPropagation.xlsx``
+     - Dataset com coluna ``cluster_hc`` adicionada
+   * - ``info_proximidade.json``
+     - Cluster mais próximo/distante do centro terrestre
+   * - ``DFsvm.xlsx``
+     - Dataset com colunas ``cluster_hc`` e ``label_lp`` (pronto pro SVM)
+   * - ``resultados_svm.csv``
+     - Previsões do SVM no conjunto de teste com nomes de planetas
+   * - ``similaridade_exoplanetas_terra.csv``
+     - Índice de similaridade com a Terra por planeta
+   * - ``figs/``
+     - Boxplots, dendrograma, scatters PCA, matrizes de confusão

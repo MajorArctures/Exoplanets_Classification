@@ -1,0 +1,211 @@
+Comparação de métodos de detecção de outliers
+==============================================
+
+Motivação
+---------
+
+Astrofisicamente, planetas do tipo Terra são outliers estatísticos legítimos
+no catálogo de exoplanetas: o viés observacional favorece a detecção de
+planetas grandes e próximos das estrelas (hot jupiters). Um filtro
+estatístico agnóstico que remove essa região está eliminando exatamente
+a região de maior interesse científico.
+
+O pipeline suporta quatro métodos de detecção de outliers, todos acessíveis
+via :func:`pipeline.preprocessing.rm_outliers`:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Método
+     - Fórmula
+     - Threshold padrão
+   * - **IQR**
+     - :math:`x < Q_1 - k \\cdot IQR` ou :math:`x > Q_3 + k \\cdot IQR`
+     - :math:`k = 1{,}5`
+   * - **Z-score**
+     - :math:`\\left|\\dfrac{x - \\mu}{\\sigma}\\right| > k`
+     - :math:`k = 3`
+   * - **MAD**
+     - :math:`\\left|\\dfrac{0{,}6745 \\cdot (x - \\tilde x)}{\\text{MAD}}\\right| > k`
+     - :math:`k = 3{,}5`
+   * - **none**
+     - apenas ``dropna``
+     - —
+
+Onde :math:`\\text{MAD} = \\text{mediana}(|x - \\tilde x|)`.
+
+Resultados
+----------
+
+Executando o pipeline com cada método e observando o efeito na distribuição
+de rótulos e na classificação da Terra:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Método
+     - N
+     - % dataset
+     - TT
+     - NT
+     - % TT
+     - |z|_max Terra
+     - Pred. Terra
+   * - IQR
+     - 3.276
+     - 71%
+     - 2.935
+     - 341
+     - 89,6%
+     - 16,7
+     - NT
+   * - **Z-score**
+     - **4.349**
+     - **95%**
+     - **4.323**
+     - **26**
+     - **99,4%**
+     - **0,85**
+     - **TT**
+   * - MAD
+     - 2.870
+     - 62%
+     - 543
+     - 2.327
+     - 18,9%
+     - 26,0
+     - NT
+   * - none
+     - 4.590
+     - 100%
+     - 4.589
+     - 1
+     - 100,0%
+     - 0,89
+     - —
+
+Classificação do Sistema Solar
+-------------------------------
+
+Nenhum dos quatro métodos produz uma classificação fisicamente coerente
+do Sistema Solar completo:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Corpo
+     - Esperado
+     - IQR
+     - Z-score
+     - MAD
+     - none
+   * - Mercúrio
+     - Rochoso
+     - TT
+     - TT
+     - NT
+     - —
+   * - Vênus
+     - Rochoso Earth-like
+     - NT
+     - TT
+     - NT
+     - —
+   * - Terra
+     - Rochoso (ref.)
+     - NT
+     - **TT**
+     - NT
+     - —
+   * - Marte
+     - Rochoso
+     - NT
+     - TT
+     - NT
+     - —
+   * - Júpiter
+     - Gigante
+     - NT
+     - **TT (errado)**
+     - NT
+     - —
+   * - Saturno
+     - Gigante
+     - NT
+     - NT
+     - NT
+     - —
+   * - Urano
+     - Gigante
+     - NT
+     - **TT (errado)**
+     - NT
+     - —
+   * - Netuno
+     - Gigante
+     - NT
+     - **TT (errado)**
+     - NT
+     - —
+
+Discussão: por que MAD é o mais agressivo?
+-------------------------------------------
+
+Este resultado contraria a intuição usual de que o MAD é um método
+"robusto". A explicação está na estrutura do dataset:
+
+* O catálogo é fortemente enviesado para hot jupiters (período orbital
+  da ordem de 10 dias), com uma cauda longa de brown dwarfs em órbitas
+  amplas (períodos de :math:`10^6` dias ou mais).
+* A **mediana** do período orbital fica no *core* central
+  (:math:`\\tilde x \\approx 10` dias), e o **MAD** também é pequeno
+  (:math:`\\approx 5` dias). O threshold de 3,5 vezes o MAD em unidades
+  físicas fica em torno de 30-40 dias.
+* Consequência: a Terra (365 dias) está **48 desvios-MAD** da mediana.
+  É outlier extremo por MAD.
+
+Em contraste:
+
+* A **média** do período orbital (:math:`\\mu \\approx 10^3` dias) e o
+  **desvio-padrão** (:math:`\\sigma \\approx 10^5` dias) são fortemente
+  inflados pelas caudas.
+* O threshold de :math:`3\\sigma` em unidades físicas fica em torno de
+  :math:`3 \\times 10^5` dias — imenso.
+* Consequência: praticamente nada é considerado outlier pelo Z-score
+  neste dataset.
+
+Conclusão metodológica
+-----------------------
+
+.. note::
+
+   Métodos estatísticos agnósticos escolhem o que remover baseado em
+   **estrutura da distribuição**, não em **relevância física**. Num
+   dataset com viés observacional forte, essa diferença é fatal:
+
+   * O que a estatística chama de "robustez" (MAD) é, na prática,
+     sensibilidade ao *core* central, que aqui está deslocado do centro
+     físico de interesse.
+   * O que a estatística chama de "não robustez" (Z-score) permite passar
+     demais em datasets com caudas extremas, colapsando a estrutura de
+     classes.
+
+Não existe escolha estatística sozinha que resolva o problema. Uma
+abordagem baseada em conhecimento de domínio — como um pré-filtro físico
+seguido de método estatístico aplicado ao subconjunto uniforme — é
+provavelmente o próximo passo mais promissor.
+
+Como executar a comparação
+---------------------------
+
+Rode o pipeline uma vez para cada método:
+
+.. code-block:: bash
+
+   python run_pipeline.py --outlier-method iqr    --out outputs
+   python run_pipeline.py --outlier-method zscore --out outputs_zscore
+   python run_pipeline.py --outlier-method mad    --out outputs_mad
+   python run_pipeline.py --outlier-method none   --out outputs_none
+
+Depois abra o notebook ``notebooks/comparacao_metodos_outliers.ipynb``
+para ver a análise lado a lado com visualizações.

@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pipeline.label_propagation &mdash; Classificação de Exoplanetas v1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=05d536ce"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Classificação de Exoplanetas
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Guias</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introducao.html">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#contexto-do-projeto">Contexto do projeto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#variaveis-utilizadas">Variáveis utilizadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#definicao-operacional-de-terrestre">Definição operacional de “terrestre”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#fluxo-do-pipeline">Fluxo do pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../uso.html">Como usar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#instalacao">Instalação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#execucao-via-linha-de-comando">Execução via linha de comando</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#uso-programatico">Uso programático</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#notebooks">Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#saidas-geradas">Saídas geradas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../colab.html">Executando no Google Colab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#setup-rapido">Setup rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#celula-de-setup">Célula de setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#baixando-resultados-do-colab">Baixando resultados do Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#dicas">Dicas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Análises metodológicas</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../circularidade.html">Diagnóstico de circularidade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#quantificacao">Quantificação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#interpretacao">Interpretação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#como-executar">Como executar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#validacao-externa">Validação externa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#recomendacao-para-reporte">Recomendação para reporte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../outliers.html">Comparação de métodos de detecção de outliers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#resultados">Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#classificacao-do-sistema-solar">Classificação do Sistema Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#discussao-por-que-mad-e-o-mais-agressivo">Discussão: por que MAD é o mais agressivo?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#conclusao-metodologica">Conclusão metodológica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#como-executar-a-comparacao">Como executar a comparação</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referência da API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Referência da API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline">Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.preprocessing">Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-pre-processamento">Módulo de Pré-processamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.carregar_arquivo"><code class="docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.limpeza_dados"><code class="docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.def_lines_limits"><code class="docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.remocao_incertezas"><code class="docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.id_outliers"><code class="docutils literal notranslate"><span class="pre">id_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.rm_outliers"><code class="docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_standard_scaler"><code class="docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.ranges_terrestres"><code class="docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.analise_cargas"><code class="docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_plot_2D"><code class="docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.hierarchical_clustering">Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id23">Módulo Hierarchical Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.hc_application"><code class="docutils literal notranslate"><span class="pre">hc_application()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.plot_dendrogram"><code class="docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.extr_rot_clusters"><code class="docutils literal notranslate"><span class="pre">extr_rot_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.cluster_info_json"><code class="docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.label_propagation">Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id41">Módulo Label Propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.carregar_info_proximidade"><code class="docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_creation"><code class="docutils literal notranslate"><span class="pre">label_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_propagation"><code class="docutils literal notranslate"><span class="pre">label_propagation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.plot_pca"><code class="docutils literal notranslate"><span class="pre">plot_pca()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.export_svm_dataset"><code class="docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.svm">Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-support-vector-machine-svm">Módulo Support Vector Machine (SVM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.separacao_de_dados"><code class="docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.treinamento_modelo_svm"><code class="docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.avaliacao_modelo"><code class="docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.captura_nomes_exoplanetas"><code class="docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.analise_detalhada_erros"><code class="docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.salvar_resultados_completos"><code class="docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.preparar_features"><code class="docutils literal notranslate"><span class="pre">preparar_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.executar_svm"><code class="docutils literal notranslate"><span class="pre">executar_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.similaridade_terra">Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-analise-de-similaridade-terrestre">Módulo Análise de Similaridade Terrestre</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.diagnostics">Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-diagnosticos">Módulo de Diagnósticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.relatorio_circularidade"><code class="docutils literal notranslate"><span class="pre">relatorio_circularidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.validacao_externa"><code class="docutils literal notranslate"><span class="pre">validacao_externa()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Classificação de Exoplanetas</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">pipeline.label_propagation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para pipeline.label_propagation</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo Label Propagation</span>
+<span class="sd">========================</span>
+
+<span class="sd">Etapa semi-supervisionada do pipeline. Cria rótulos iniciais a partir da</span>
+<span class="sd">identificação de cluster TT (Tipo Terrestre) e cluster NT (Não Terrestre)</span>
+<span class="sd">realizada na etapa 2, deixando os demais planetas como não rotulados (-1).</span>
+<span class="sd">Em seguida, propaga esses rótulos pelo restante do dataset usando o</span>
+<span class="sd">algoritmo LabelPropagation do scikit-learn com kernel k-NN.</span>
+
+<span class="sd">Convenção de rótulos</span>
+<span class="sd">--------------------</span>
+<span class="sd">- ``-1`` : não rotulado</span>
+<span class="sd">- ``1`` : TT (Tipo Terrestre)</span>
+<span class="sd">- ``0`` : NT (Não Terrestre)</span>
+
+<span class="sd">Inclui</span>
+<span class="sd">------</span>
+<span class="sd">- Criação dos rótulos semi-supervisionados iniciais (y_semi)</span>
+<span class="sd">- Aplicação do algoritmo Label Propagation</span>
+<span class="sd">- Visualização dos rótulos propagados no espaço PCA</span>
+<span class="sd">- Exportação do dataset final para uso pelo SVM</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.semi_supervised</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelPropagation</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_and_show</span><span class="p">(</span><span class="n">fig_name</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper interno: salva figura (se save_dir) e exibe (se show).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">save_dir</span><span class="p">:</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fig_name</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="carregar_info_proximidade">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.carregar_info_proximidade">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">carregar_info_proximidade</span><span class="p">(</span><span class="n">caminho</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Carrega o JSON com identificação dos clusters TT e NT.</span>
+
+<span class="sd">    Lê o arquivo produzido por</span>
+<span class="sd">    :func:`pipeline.hierarchical_clustering.cluster_info_json`.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caminho : str</span>
+<span class="sd">        Caminho do arquivo JSON.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dicionário com chaves ``cluster_mais_proximo`` (TT) e</span>
+<span class="sd">        ``cluster_mais_distante`` (NT).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">caminho</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="label_creation">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.label_creation">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">label_creation</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">cluster_mais_proximo</span><span class="p">,</span> <span class="n">cluster_mais_distante</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4.0 - Criação dos Rótulos Semi-Supervisionados (y_semi).</span>
+
+<span class="sd">    Constrói o vetor inicial de rótulos com a convenção:</span>
+
+<span class="sd">    - Cluster mais próximo do centro terrestre → rótulo ``1`` (TT)</span>
+<span class="sd">    - Cluster mais distante do centro terrestre → rótulo ``0`` (NT)</span>
+<span class="sd">    - Demais clusters → rótulo ``-1`` (não rotulado, será preenchido pelo LP)</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    clusters : array-like</span>
+<span class="sd">        Rótulos de cluster do hierarchical clustering.</span>
+<span class="sd">    cluster_mais_proximo : int</span>
+<span class="sd">        Índice do cluster identificado como TT.</span>
+<span class="sd">    cluster_mais_distante : int</span>
+<span class="sd">        Índice do cluster identificado como NT.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    y_semi : numpy.ndarray</span>
+<span class="sd">        Vetor de rótulos iniciais (-1, 0 ou 1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Clusters únicos:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">clusters</span><span class="p">))</span>
+
+    <span class="n">y_semi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">clusters</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">y_semi</span><span class="p">[</span><span class="n">clusters</span> <span class="o">==</span> <span class="n">cluster_mais_proximo</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">y_semi</span><span class="p">[</span><span class="n">clusters</span> <span class="o">==</span> <span class="n">cluster_mais_distante</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Rótulos iniciais (contagem):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y_semi</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">y_semi</span></div>
+
+
+
+<div class="viewcode-block" id="label_propagation">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.label_propagation">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">label_propagation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_semi</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4.1 - Aplicação do Label Propagation.</span>
+
+<span class="sd">    Aplica o algoritmo :class:`sklearn.semi_supervised.LabelPropagation`</span>
+<span class="sd">    com kernel k-NN sobre os dados padronizados, propagando os rótulos</span>
+<span class="sd">    conhecidos (TT/NT) para os planetas inicialmente não rotulados.</span>
+
+<span class="sd">    Valida também a acurácia nos rótulos originais (deve ser próxima de 100%</span>
+<span class="sd">    porque LP idealmente respeita as seeds).</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like</span>
+<span class="sd">        Dados de entrada (5 variáveis físicas padronizadas).</span>
+<span class="sd">    y_semi : numpy.ndarray</span>
+<span class="sd">        Vetor de rótulos iniciais (com -1 nos não rotulados).</span>
+<span class="sd">    clusters : array-like</span>
+<span class="sd">        Rótulos de cluster do HC (usado para crosstab de diagnóstico).</span>
+<span class="sd">    n_neighbors : int, opcional</span>
+<span class="sd">        Número de vizinhos no kernel k-NN (padrão 7).</span>
+<span class="sd">    max_iter : int, opcional</span>
+<span class="sd">        Iterações máximas do algoritmo (padrão 1000).</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    labels_final : numpy.ndarray</span>
+<span class="sd">        Vetor de rótulos após propagação (todos preenchidos com 0 ou 1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">LabelPropagation</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;knn&quot;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
+    <span class="n">lp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_semi</span><span class="p">)</span>
+    <span class="n">labels_final</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">transduction_</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Rótulos finais (contagem):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">labels_final</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+    <span class="n">mask_known</span> <span class="o">=</span> <span class="n">y_semi</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">mask_known</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">labels_final</span><span class="p">[</span><span class="n">mask_known</span><span class="p">]</span> <span class="o">==</span> <span class="n">y_semi</span><span class="p">[</span><span class="n">mask_known</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Acurácia nos rótulos iniciais: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">mask_known</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> instâncias verificadas)&quot;</span><span class="p">)</span>
+
+    <span class="n">ct</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_init&quot;</span><span class="p">),</span>
+                     <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">labels_final</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;label_propagado&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Crosstab (cluster inicial x label propagado):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">labels_final</span></div>
+
+
+
+<div class="viewcode-block" id="plot_pca">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.plot_pca">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pca</span><span class="p">(</span><span class="n">X_pca</span><span class="p">,</span> <span class="n">labels_final</span><span class="p">,</span> <span class="n">y_semi</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4.2 - Visualização dos rótulos propagados no espaço PCA 2D.</span>
+
+<span class="sd">    Plota o scatter dos planetas coloridos por rótulo final (TT/NT), com</span>
+<span class="sd">    destaque circular nos exemplos inicialmente rotulados (seeds).</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_pca : pandas.DataFrame</span>
+<span class="sd">        DataFrame contendo colunas PC1 e PC2.</span>
+<span class="sd">    labels_final : array-like</span>
+<span class="sd">        Rótulos finais após propagação (0 ou 1).</span>
+<span class="sd">    y_semi : array-like</span>
+<span class="sd">        Rótulos iniciais (com -1 nos não rotulados).</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Se fornecido, salva como ``label_propagation_pca.png``.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">var1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">])</span>
+    <span class="n">var2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">])</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">var1</span> <span class="o">+</span> <span class="n">var2</span>
+    <span class="n">perc1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">var1</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">perc2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">var2</span> <span class="o">/</span> <span class="n">total</span>
+
+    <span class="n">label_names</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;TT — Tipo Terrestre&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;NT — Não Terrestre&quot;</span><span class="p">}</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_final</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels_final</span> <span class="o">==</span> <span class="n">lab</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;PC1&quot;</span><span class="p">],</span> <span class="n">X_pca</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                    <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">lab</span><span class="p">))</span><span class="si">}</span><span class="s2"> (n=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="n">mask_known</span> <span class="o">=</span> <span class="n">y_semi</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_known</span><span class="p">,</span> <span class="s2">&quot;PC1&quot;</span><span class="p">],</span> <span class="n">X_pca</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_known</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                <span class="n">facecolors</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exemplos inicialmente rotulados&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC1 (</span><span class="si">{</span><span class="n">perc1</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC2 (</span><span class="si">{</span><span class="n">perc2</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribuição dos Exoplanetas após Label Propagation (PCA 2D)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">_save_and_show</span><span class="p">(</span><span class="s2">&quot;label_propagation_pca.png&quot;</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="export_svm_dataset">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.export_svm_dataset">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_svm_dataset</span><span class="p">(</span><span class="n">df_base</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">labels_lp</span><span class="p">,</span> <span class="n">caminho_saida</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4.3 - Exportação do dataset final para uso pelo SVM.</span>
+
+<span class="sd">    Constrói o DataFrame com:</span>
+
+<span class="sd">    - ``pl_name``: nome do planeta</span>
+<span class="sd">    - as 5 variáveis físicas padronizadas</span>
+<span class="sd">    - ``cluster_hc``: rótulo do hierarchical clustering</span>
+<span class="sd">    - ``label_lp``: rótulo final após label propagation (0 ou 1)</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_base : pandas.DataFrame</span>
+<span class="sd">        DataFrame com colunas ``pl_name``, as 5 features físicas e</span>
+<span class="sd">        ``cluster_hc``.</span>
+<span class="sd">    clusters : array-like</span>
+<span class="sd">        Rótulos de cluster do HC.</span>
+<span class="sd">    labels_lp : array-like</span>
+<span class="sd">        Rótulos após label propagation.</span>
+<span class="sd">    caminho_saida : str</span>
+<span class="sd">        Caminho do Excel de saída (entrada da etapa 4).</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    DFsvm : pandas.DataFrame</span>
+<span class="sd">        DataFrame exportado.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se os tamanhos de ``clusters`` ou ``labels_lp`` não coincidem com</span>
+<span class="sd">        o de ``df_base``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_base</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Clusters e DataFrame com tamanhos diferentes&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_lp</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rótulos LP e DataFrame com tamanhos diferentes&quot;</span><span class="p">)</span>
+
+    <span class="n">colunas_excluir</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pl_name&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_hc&quot;</span><span class="p">,</span> <span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">]</span>
+    <span class="n">colunas_numericas</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_base</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colunas_excluir</span><span class="p">]</span>
+
+    <span class="n">DFsvm</span> <span class="o">=</span> <span class="n">df_base</span><span class="p">[[</span><span class="s2">&quot;pl_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">colunas_numericas</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">DFsvm</span><span class="p">[</span><span class="s2">&quot;cluster_hc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clusters</span>
+    <span class="n">DFsvm</span><span class="p">[</span><span class="s2">&quot;label_lp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_lp</span>
+
+    <span class="n">Path</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">DFsvm</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Salvo: </span><span class="si">{</span><span class="n">caminho_saida</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Distribuição dos rótulos:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">DFsvm</span><span class="p">[</span><span class="s2">&quot;label_lp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">DFsvm</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../modules.html#pipeline.label_propagation.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">,</span> <span class="n">caminho_info_proximidade</span><span class="p">,</span> <span class="n">caminho_saida</span><span class="p">,</span>
+         <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Executa toda a etapa 3 (label propagation) do pipeline.</span>
+
+<span class="sd">    Encadeia:</span>
+<span class="sd">    :func:`carregar_info_proximidade` → :func:`label_creation` →</span>
+<span class="sd">    :func:`label_propagation` → :func:`plot_pca` →</span>
+<span class="sd">    :func:`export_svm_dataset`.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caminho_entrada : str</span>
+<span class="sd">        Caminho do Excel produzido pela etapa 2.</span>
+<span class="sd">    caminho_info_proximidade : str</span>
+<span class="sd">        Caminho do JSON com identificação TT/NT.</span>
+<span class="sd">    caminho_saida : str</span>
+<span class="sd">        Caminho do Excel de saída (entrada da etapa 4).</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Diretório para salvar figuras.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe figuras interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Chaves ``DFsvm``, ``labels_final``, ``y_semi``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ETAPA 3 — LABEL PROPAGATION&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset carregado: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;cluster_hc&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Coluna &#39;cluster_hc&#39; não encontrada.&quot;</span><span class="p">)</span>
+
+    <span class="n">clusters</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;cluster_hc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">colunas_excluir</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pl_name&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_hc&quot;</span><span class="p">,</span> <span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">]</span>
+    <span class="n">colunas_numericas</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colunas_excluir</span><span class="p">]</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="n">carregar_info_proximidade</span><span class="p">(</span><span class="n">caminho_info_proximidade</span><span class="p">)</span>
+    <span class="n">cluster_prox</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;cluster_mais_proximo&quot;</span><span class="p">]</span>
+    <span class="n">cluster_dist</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;cluster_mais_distante&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster TT (mais próximo): </span><span class="si">{</span><span class="n">cluster_prox</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster NT (mais distante): </span><span class="si">{</span><span class="n">cluster_dist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">y_semi</span> <span class="o">=</span> <span class="n">label_creation</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">cluster_prox</span><span class="p">,</span> <span class="n">cluster_dist</span><span class="p">)</span>
+    <span class="n">labels_final</span> <span class="o">=</span> <span class="n">label_propagation</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">colunas_numericas</span><span class="p">],</span> <span class="n">y_semi</span><span class="p">,</span> <span class="n">clusters</span><span class="p">)</span>
+
+    <span class="n">plot_pca</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">]],</span> <span class="n">labels_final</span><span class="p">,</span> <span class="n">y_semi</span><span class="p">,</span>
+             <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+
+    <span class="n">DFsvm</span> <span class="o">=</span> <span class="n">export_svm_dataset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">labels_final</span><span class="p">,</span> <span class="n">caminho_saida</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;DFsvm&quot;</span><span class="p">:</span> <span class="n">DFsvm</span><span class="p">,</span> <span class="s2">&quot;labels_final&quot;</span><span class="p">:</span> <span class="n">labels_final</span><span class="p">,</span> <span class="s2">&quot;y_semi&quot;</span><span class="p">:</span> <span class="n">y_semi</span><span class="p">}</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span>
+        <span class="n">caminho_entrada</span><span class="o">=</span><span class="s2">&quot;../outputs/DFLabelPropagation.xlsx&quot;</span><span class="p">,</span>
+        <span class="n">caminho_info_proximidade</span><span class="o">=</span><span class="s2">&quot;../outputs/info_proximidade.json&quot;</span><span class="p">,</span>
+        <span class="n">caminho_saida</span><span class="o">=</span><span class="s2">&quot;../outputs/DFsvm.xlsx&quot;</span><span class="p">,</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;../outputs/figs&quot;</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2026, Beatriz — Iniciação Científica.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

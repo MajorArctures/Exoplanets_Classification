@@ -1,0 +1,1637 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referência da API &mdash; Classificação de Exoplanetas v1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=05d536ce"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="prev" title="Comparação de métodos de detecção de outliers" href="outliers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Classificação de Exoplanetas
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Guias</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introducao.html">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#contexto-do-projeto">Contexto do projeto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#variaveis-utilizadas">Variáveis utilizadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#definicao-operacional-de-terrestre">Definição operacional de “terrestre”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introducao.html#fluxo-do-pipeline">Fluxo do pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uso.html">Como usar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uso.html#instalacao">Instalação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uso.html#execucao-via-linha-de-comando">Execução via linha de comando</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uso.html#uso-programatico">Uso programático</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uso.html#notebooks">Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uso.html#saidas-geradas">Saídas geradas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="colab.html">Executando no Google Colab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#setup-rapido">Setup rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#celula-de-setup">Célula de setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#baixando-resultados-do-colab">Baixando resultados do Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html#dicas">Dicas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Análises metodológicas</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="circularidade.html">Diagnóstico de circularidade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#quantificacao">Quantificação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#interpretacao">Interpretação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#como-executar">Como executar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#validacao-externa">Validação externa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="circularidade.html#recomendacao-para-reporte">Recomendação para reporte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Comparação de métodos de detecção de outliers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#resultados">Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#classificacao-do-sistema-solar">Classificação do Sistema Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#discussao-por-que-mad-e-o-mais-agressivo">Discussão: por que MAD é o mais agressivo?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#conclusao-metodologica">Conclusão metodológica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outliers.html#como-executar-a-comparacao">Como executar a comparação</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referência da API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Referência da API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline">Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.preprocessing">Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo-de-pre-processamento">Módulo de Pré-processamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.carregar_arquivo"><code class="docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.limpeza_dados"><code class="docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.def_lines_limits"><code class="docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.remocao_incertezas"><code class="docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.id_outliers"><code class="docutils literal notranslate"><span class="pre">id_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.rm_outliers"><code class="docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.pca_standard_scaler"><code class="docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.ranges_terrestres"><code class="docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.analise_cargas"><code class="docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.pca_plot_2D"><code class="docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.preprocessing.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.hierarchical_clustering">Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id23">Módulo Hierarchical Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.hc_application"><code class="docutils literal notranslate"><span class="pre">hc_application()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.plot_dendrogram"><code class="docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.extr_rot_clusters"><code class="docutils literal notranslate"><span class="pre">extr_rot_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.cluster_info_json"><code class="docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.hierarchical_clustering.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.label_propagation">Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id41">Módulo Label Propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.carregar_info_proximidade"><code class="docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.label_creation"><code class="docutils literal notranslate"><span class="pre">label_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.label_propagation"><code class="docutils literal notranslate"><span class="pre">label_propagation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.plot_pca"><code class="docutils literal notranslate"><span class="pre">plot_pca()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.export_svm_dataset"><code class="docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.label_propagation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.svm">Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo-support-vector-machine-svm">Módulo Support Vector Machine (SVM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.separacao_de_dados"><code class="docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.treinamento_modelo_svm"><code class="docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.avaliacao_modelo"><code class="docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.captura_nomes_exoplanetas"><code class="docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.analise_detalhada_erros"><code class="docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.salvar_resultados_completos"><code class="docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.preparar_features"><code class="docutils literal notranslate"><span class="pre">preparar_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.executar_svm"><code class="docutils literal notranslate"><span class="pre">executar_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.svm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.similaridade_terra">Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo-analise-de-similaridade-terrestre">Módulo Análise de Similaridade Terrestre</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.similaridade_terra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pipeline.diagnostics">Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modulo-de-diagnosticos">Módulo de Diagnósticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.diagnostics.relatorio_circularidade"><code class="docutils literal notranslate"><span class="pre">relatorio_circularidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline.diagnostics.validacao_externa"><code class="docutils literal notranslate"><span class="pre">validacao_externa()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Classificação de Exoplanetas</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Referência da API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="referencia-da-api">
+<h1>Referência da API<a class="headerlink" href="#referencia-da-api" title="Link para este cabeçalho"></a></h1>
+<p>Documentação gerada automaticamente a partir dos docstrings de cada módulo.</p>
+<section id="module-pipeline">
+<span id="pacote-pipeline"></span><h2>Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code><a class="headerlink" href="#module-pipeline" title="Link para este cabeçalho"></a></h2>
+<p>Pipeline de classificação de exoplanetas.</p>
+</section>
+<section id="module-pipeline.preprocessing">
+<span id="modulo-preprocessing"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code><a class="headerlink" href="#module-pipeline.preprocessing" title="Link para este cabeçalho"></a></h2>
+<section id="modulo-de-pre-processamento">
+<h3>Módulo de Pré-processamento<a class="headerlink" href="#modulo-de-pre-processamento" title="Link para este cabeçalho"></a></h3>
+<p>Pipeline de tratamento dos dados de exoplanetas da base
+<em>Planetary Systems Composite Data</em> (NASA Exoplanet Archive):</p>
+<ol class="arabic simple">
+<li><p>Filtragem de colunas relevantes</p></li>
+<li><p>Filtragem por limites (pl_*lim ∈ {-1, 0, 1})</p></li>
+<li><p>Remoção de linhas com incerteza relativa &gt; 50%</p></li>
+<li><p>Identificação e remoção de outliers</p></li>
+<li><p>Padronização (StandardScaler) e PCA (2 componentes)</p></li>
+<li><p>Cálculo dos ranges terrestres no espaço padronizado</p></li>
+<li><p>Análise das cargas fatoriais e visualização</p></li>
+</ol>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.carregar_arquivo">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">carregar_arquivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#carregar_arquivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.carregar_arquivo" title="Link para esta definição"></a></dt>
+<dd><p>0 - Carregamento da base de dados.</p>
+<p>Carrega a base <em>Planetary Systems Composite Data</em> em formato XLSX ou CSV.
+O CSV do NASA Exoplanet Archive vem com header comentado por <code class="docutils literal notranslate"><span class="pre">#</span></code>,
+tratado automaticamente.</p>
+<section id="parametros">
+<h3>Parâmetros<a class="headerlink" href="#parametros" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho<span class="classifier">str</span></dt><dd><p>Caminho do arquivo Excel (.xlsx) ou CSV (.csv).</p>
+</dd>
+</dl>
+</section>
+<section id="retorna">
+<h3>Retorna<a class="headerlink" href="#retorna" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame carregado.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">raises FileNotFoundError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Se o arquivo não for encontrado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.limpeza_dados">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">limpeza_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#limpeza_dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.limpeza_dados" title="Link para esta definição"></a></dt>
+<dd><p>1.1 - Remoção das Colunas que não serão utilizadas.</p>
+<p>Nesta etapa, todas as linhas da planilha são mantidas.</p>
+<section id="dicionarios-de-variaveis">
+<h3>Dicionários de variáveis<a class="headerlink" href="#dicionarios-de-variaveis" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>pl_name = Nome do Planeta</p></li>
+<li><p>pl_orbper = Período Orbital (Dias)</p></li>
+<li><p>pl_orbsmax = Semi-eixo Maior da Órbita</p></li>
+<li><p>pl_rade = Raio do Planeta</p></li>
+<li><p>pl_bmasse = Massa do Planeta</p></li>
+<li><p>pl_orbeccen = Excentricidade Orbital</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Parâmetros<a class="headerlink" href="#id1" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Retorna<a class="headerlink" href="#id2" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame processado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.def_lines_limits">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">def_lines_limits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_columns_filter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#def_lines_limits"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.def_lines_limits" title="Link para esta definição"></a></dt>
+<dd><p>1.2 - Remoção das Linhas de limites diferentes de 0, -1 e 1.</p>
+<p>Nesta etapa, deixam-se apenas as linhas que contêm valores confirmados
+ou estimados com precisão e/ou aqueles estimados com grau de incerteza
+inferior a 50%.</p>
+<section id="descricao-de-variaveis">
+<h3>Descrição de variáveis<a class="headerlink" href="#descricao-de-variaveis" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>pl_orbperlim = Limite da distância máxima da estrela host</p></li>
+<li><p>pl_orbsmaxlim = Limite do semi-eixo maior da órbita</p></li>
+<li><p>pl_radelim = Limite do raio do planeta</p></li>
+<li><p>pl_bmasselim = Limite da massa do planeta</p></li>
+<li><p>pl_orbeccenlim = Limite da excentricidade orbital</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Parâmetros<a class="headerlink" href="#id3" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_columns_filter<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Retorna<a class="headerlink" href="#id4" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_lim<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame processado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.remocao_incertezas">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">remocao_incertezas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_lines_limits</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#remocao_incertezas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.remocao_incertezas" title="Link para esta definição"></a></dt>
+<dd><p>1.3 - Remoção das Linhas de alta incerteza.</p>
+<p>Eliminam-se as linhas que contêm grau de incerteza superior a 50%.</p>
+<section id="criterios">
+<h3>Critérios<a class="headerlink" href="#criterios" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Valores == 0 são considerados precisos, não sendo necessário verificar
+incerteza.</p></li>
+<li><p>Valores != 0 devem apresentar incerteza relativa ≤ 50%.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Parâmetros<a class="headerlink" href="#id5" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_lim<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h3>Retorna<a class="headerlink" href="#id6" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame processado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.id_outliers">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">id_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_inc_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#id_outliers"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.id_outliers" title="Link para esta definição"></a></dt>
+<dd><p>1.4 - Identificação dos Outliers.</p>
+<p>Gera um boxplot para cada uma das 5 variáveis físicas, permitindo
+inspeção visual da distribuição e localização dos outliers.</p>
+<section id="metodo">
+<h3>Método<a class="headerlink" href="#metodo" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Define o tamanho da figura (polegadas)</p></li>
+<li><p>Remove valores NaN para evitar erros</p></li>
+<li><p>Cria um boxplot para cada coluna numérica</p></li>
+<li><p>Define um grid para visualização (0.6 = 60% opaco)</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>Critérios<a class="headerlink" href="#id7" title="Link para este cabeçalho"></a></h3>
+<p>Cada boxplot sumariza a distribuição dos dados através de:
+[Q1 - 1.5×IQR, Q3 + 1.5×IQR], onde IQR = Q3 - Q1.</p>
+<ul class="simple">
+<li><p>Linha central: mediana (Q2)</p></li>
+<li><p>Caixa: intervalo interquartil (IQR = Q3 - Q1)</p></li>
+<li><p>Whiskers: estendem-se até 1.5×IQR após os quartis Q1 e Q3</p></li>
+<li><p>Pontos além dos whiskers: outliers estatísticos (valores atípicos)</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Parâmetros<a class="headerlink" href="#id8" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_inc_rm<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva cada boxplot como PNG neste diretório.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code> (padrão), exibe os boxplots interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Retorna<a class="headerlink" href="#id9" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>None</dt><dd><p>A função apenas exibe os boxplots.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.rm_outliers">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">rm_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_inc_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'iqr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#rm_outliers"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.rm_outliers" title="Link para esta definição"></a></dt>
+<dd><p>1.5 - Identificação das linhas que contém os outliers.</p>
+<p>Como parte implícita dessa função todas as linhas que contenham valores
+NaN (Not a Number) em qualquer uma das variáveis analisadas são
+automaticamente removidas do dataset.</p>
+<section id="metodos-disponiveis">
+<h3>Métodos disponíveis<a class="headerlink" href="#metodos-disponiveis" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p><strong>iqr</strong> (padrão, Tukey 1977): remove se <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">Q1</span> <span class="pre">-</span> <span class="pre">k·IQR</span></code> ou
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">Q3</span> <span class="pre">+</span> <span class="pre">k·IQR</span></code>. Threshold padrão <code class="docutils literal notranslate"><span class="pre">k=1.5</span></code>. Método utilizado no
+pipeline original.</p></li>
+<li><p><strong>zscore</strong>: remove se <code class="docutils literal notranslate"><span class="pre">|x</span> <span class="pre">-</span> <span class="pre">μ|</span> <span class="pre">/</span> <span class="pre">σ</span> <span class="pre">&gt;</span> <span class="pre">k</span></code>. Threshold padrão <code class="docutils literal notranslate"><span class="pre">k=3</span></code>.</p></li>
+<li><p><strong>mad</strong> (Iglewicz-Hoaglin 1993): modified z-score
+<code class="docutils literal notranslate"><span class="pre">|0.6745·(x</span> <span class="pre">-</span> <span class="pre">mediana)</span> <span class="pre">/</span> <span class="pre">MAD|</span> <span class="pre">&gt;</span> <span class="pre">k</span></code>, onde <code class="docutils literal notranslate"><span class="pre">MAD</span> <span class="pre">=</span> <span class="pre">mediana(|x</span> <span class="pre">-</span> <span class="pre">mediana|)</span></code>.
+Threshold padrão <code class="docutils literal notranslate"><span class="pre">k=3.5</span></code>.</p></li>
+<li><p><strong>none</strong>: apenas dropna, sem remoção estatística.</p></li>
+</ul>
+</section>
+<section id="metodo-aplicado-por-variavel">
+<h3>Método (aplicado por variável)<a class="headerlink" href="#metodo-aplicado-por-variavel" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Inicializa a condição como True (todos os pontos mantidos por padrão)</p></li>
+<li><p>Para cada coluna, calcula os limites conforme o método escolhido</p></li>
+<li><p>Atualiza a condição AND para manter apenas pontos DENTRO dos limites</p></li>
+<li><p>Filtra o DataFrame original (mantém apenas linhas sem outliers em
+NENHUMA das variáveis)</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Parâmetros<a class="headerlink" href="#id10" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_inc_rm<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+<dt>method<span class="classifier">{‘iqr’, ‘zscore’, ‘mad’, ‘none’}, opcional</span></dt><dd><p>Método de detecção. Padrão <code class="docutils literal notranslate"><span class="pre">'iqr'</span></code>.</p>
+</dd>
+<dt>threshold<span class="classifier">float, opcional</span></dt><dd><p>Multiplicador/limite. Se <code class="docutils literal notranslate"><span class="pre">None</span></code>, usa o padrão de cada método.</p>
+</dd>
+<dt>colunas<span class="classifier">list of str, opcional</span></dt><dd><p>Colunas onde aplicar. Se <code class="docutils literal notranslate"><span class="pre">None</span></code>, usa <code class="xref py py-data docutils literal notranslate"><span class="pre">COLUNAS_NUMERICAS</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h3>Retorna<a class="headerlink" href="#id11" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame filtrado, contendo apenas linhas sem outliers em nenhuma
+das variáveis analisadas.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.pca_standard_scaler">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">pca_standard_scaler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_inc_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#pca_standard_scaler"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.pca_standard_scaler" title="Link para esta definição"></a></dt>
+<dd><p>2 - NORMALIZAÇÃO/PADRONIZAÇÃO DE DADOS.</p>
+<p>Esta etapa realiza a seleção das variáveis numéricas, a padronização
+dos dados utilizando o método StandardScaler e a aplicação da técnica
+de redução de dimensionalidade PCA, com foco nos dois primeiros
+componentes principais.</p>
+<section id="id12">
+<h3>Método<a class="headerlink" href="#id12" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Seleção das colunas numéricas</p></li>
+<li><p>Aplicação do StandardScaler</p></li>
+<li><p>Aplicação do PCA</p></li>
+<li><p>Análise da Variância Explicada</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Parâmetros<a class="headerlink" href="#id13" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_inc_rm<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame a ser processado.</p>
+</dd>
+<dt>n_components<span class="classifier">int, opcional</span></dt><dd><p>Número de componentes principais. Padrão 2.</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h3>Retorna<a class="headerlink" href="#id14" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_to_hc<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com os dados padronizados e reduzidos (PC1, PC2 + 5 vars std).</p>
+</dd>
+<dt>pca_std<span class="classifier">sklearn.decomposition.PCA</span></dt><dd><p>Objeto PCA ajustado sobre os dados padronizados.</p>
+</dd>
+<dt>scaler<span class="classifier">sklearn.preprocessing.StandardScaler</span></dt><dd><p>Scaler ajustado (necessário para transformar novos dados).</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Lista com os nomes das variáveis numéricas utilizadas no PCA.</p>
+</dd>
+<dt>variancia_pc1<span class="classifier">float</span></dt><dd><p>Variância explicada pelo PC1.</p>
+</dd>
+<dt>variancia_pc2<span class="classifier">float</span></dt><dd><p>Variância explicada pelo PC2.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.ranges_terrestres">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">ranges_terrestres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas_numericas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_rgjson</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#ranges_terrestres"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.ranges_terrestres" title="Link para esta definição"></a></dt>
+<dd><p>3.4 - Referencial Terrestre no Espaço Padronizado.</p>
+<p>Define os ranges físicos característicos de planetas terrestres e os
+converte para o espaço padronizado (z-score). Persiste em JSON para uso
+pelas etapas seguintes.</p>
+<section id="ranges-fisicos-utilizados">
+<h3>Ranges físicos utilizados<a class="headerlink" href="#ranges-fisicos-utilizados" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>pl_orbper: 88 – 687 dias (Mercúrio a Marte)</p></li>
+<li><p>pl_orbsmax: 0,39 – 1,52 UA</p></li>
+<li><p>pl_rade: 0,5 – 1,6 raios terrestres</p></li>
+<li><p>pl_bmasse: 1 – 15 massas terrestres</p></li>
+<li><p>pl_orbeccen: 0 – 0,25</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Parâmetros<a class="headerlink" href="#id15" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>scaler<span class="classifier">sklearn.preprocessing.StandardScaler</span></dt><dd><p>Scaler ajustado aos dados físicos originais.</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Lista com os nomes das variáveis numéricas (mesma ordem do scaler).</p>
+</dd>
+<dt>caminho_rgjson<span class="classifier">str</span></dt><dd><p>Caminho do arquivo JSON de saída.</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h3>Retorna<a class="headerlink" href="#id16" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>ranges_padronizados<span class="classifier">dict</span></dt><dd><p>Ranges terrestres no espaço padronizado.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Se o scaler não estiver ajustado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.analise_cargas">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">analise_cargas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pca_std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas_numericas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#analise_cargas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.analise_cargas" title="Link para esta definição"></a></dt>
+<dd><p>2.7 - Análise das cargas (loadings) e contribuição das variáveis no PCA.</p>
+<p>Esta etapa calcula as cargas fatoriais (loadings) das variáveis originais
+em cada componente principal e estima a contribuição percentual de cada
+variável nos dois primeiros componentes (PC1 e PC2). Além disso, é
+calculada a contribuição acumulada das três variáveis mais relevantes em
+cada componente.</p>
+<section id="id17">
+<h3>Parâmetros<a class="headerlink" href="#id17" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pca_std<span class="classifier">sklearn.decomposition.PCA</span></dt><dd><p>Objeto PCA já ajustado sobre os dados padronizados.</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Lista com os nomes das variáveis numéricas utilizadas no PCA.</p>
+</dd>
+</dl>
+</section>
+<section id="id18">
+<h3>Retorna<a class="headerlink" href="#id18" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_loadings<span class="classifier">pandas.DataFrame</span></dt><dd><p>Cargas fatoriais das variáveis para PC1 e PC2.</p>
+</dd>
+<dt>top3_pc1<span class="classifier">pandas.Series</span></dt><dd><p>Contribuição das 3 variáveis mais relevantes em PC1.</p>
+</dd>
+<dt>top3_pc2<span class="classifier">pandas.Series</span></dt><dd><p>Contribuição das 3 variáveis mais relevantes em PC2.</p>
+</dd>
+<dt>soma_top3_pc1<span class="classifier">float</span></dt><dd><p>Soma da contribuição das top-3 em PC1.</p>
+</dd>
+<dt>soma_top3_pc2<span class="classifier">float</span></dt><dd><p>Soma da contribuição das top-3 em PC2.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.pca_plot_2D">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">pca_plot_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_to_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variancia_pc1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variancia_pc2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top3_pc1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top3_pc2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soma_top3_pc1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soma_top3_pc2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#pca_plot_2D"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.pca_plot_2D" title="Link para esta definição"></a></dt>
+<dd><p>2.9 - Visualização do PCA 2D com contribuição acumulada.</p>
+<p>Esta função cria um gráfico de dispersão 2D com os dados tratados,
+incluindo a variância explicada por PC1/PC2 e as top-3 variáveis
+contribuidoras nos labels dos eixos.</p>
+<section id="id19">
+<h3>Parâmetros<a class="headerlink" href="#id19" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_to_hc<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame contendo os dados (colunas PC1, PC2).</p>
+</dd>
+<dt>variancia_pc1<span class="classifier">float</span></dt><dd><p>Variância explicada pelo PC1.</p>
+</dd>
+<dt>variancia_pc2<span class="classifier">float</span></dt><dd><p>Variância explicada pelo PC2.</p>
+</dd>
+<dt>top3_pc1<span class="classifier">pandas.Series</span></dt><dd><p>Contribuição percentual das três variáveis mais relevantes no PC1.</p>
+</dd>
+<dt>top3_pc2<span class="classifier">pandas.Series</span></dt><dd><p>Contribuição percentual das três variáveis mais relevantes no PC2.</p>
+</dd>
+<dt>soma_top3_pc1<span class="classifier">float</span></dt><dd><p>Soma da contribuição percentual das três variáveis mais relevantes no PC1.</p>
+</dd>
+<dt>soma_top3_pc2<span class="classifier">float</span></dt><dd><p>Soma da contribuição percentual das três variáveis mais relevantes no PC2.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva o gráfico como <code class="docutils literal notranslate"><span class="pre">pca_2d.png</span></code>.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h3>Retorna<a class="headerlink" href="#id20" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>None</dt><dd><p>A função apenas exibe/salva o gráfico.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.preprocessing.main">
+<span class="sig-prename descclassname"><span class="pre">pipeline.preprocessing.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho_entrada</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_rgjson</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'iqr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remover_outliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/preprocessing.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.preprocessing.main" title="Link para esta definição"></a></dt>
+<dd><p>Executa toda a etapa 1 (pré-processamento) do pipeline.</p>
+<p>Encadeia as sub-etapas:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#pipeline.preprocessing.carregar_arquivo" title="pipeline.preprocessing.carregar_arquivo"><code class="xref py py-func docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pipeline.preprocessing.limpeza_dados" title="pipeline.preprocessing.limpeza_dados"><code class="xref py py-func docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a> → <a class="reference internal" href="#pipeline.preprocessing.def_lines_limits" title="pipeline.preprocessing.def_lines_limits"><code class="xref py py-func docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a> → <a class="reference internal" href="#pipeline.preprocessing.remocao_incertezas" title="pipeline.preprocessing.remocao_incertezas"><code class="xref py py-func docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pipeline.preprocessing.id_outliers" title="pipeline.preprocessing.id_outliers"><code class="xref py py-func docutils literal notranslate"><span class="pre">id_outliers()</span></code></a> → <a class="reference internal" href="#pipeline.preprocessing.rm_outliers" title="pipeline.preprocessing.rm_outliers"><code class="xref py py-func docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pipeline.preprocessing.pca_standard_scaler" title="pipeline.preprocessing.pca_standard_scaler"><code class="xref py py-func docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pipeline.preprocessing.ranges_terrestres" title="pipeline.preprocessing.ranges_terrestres"><code class="xref py py-func docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a> e <a class="reference internal" href="#pipeline.preprocessing.analise_cargas" title="pipeline.preprocessing.analise_cargas"><code class="xref py py-func docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pipeline.preprocessing.pca_plot_2D" title="pipeline.preprocessing.pca_plot_2D"><code class="xref py py-func docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></p></li>
+</ol>
+<p>E persiste o DataFrame resultante para a etapa seguinte.</p>
+<section id="id21">
+<h3>Parâmetros<a class="headerlink" href="#id21" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho_entrada<span class="classifier">str</span></dt><dd><p>Caminho do arquivo de entrada (.xlsx ou .csv).</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do Excel de saída (entrada da etapa 2).</p>
+</dd>
+<dt>caminho_rgjson<span class="classifier">str</span></dt><dd><p>Caminho do JSON de ranges terrestres padronizados.</p>
+</dd>
+<dt>outlier_method<span class="classifier">{‘iqr’, ‘zscore’, ‘mad’, ‘none’}, opcional</span></dt><dd><p>Método de detecção de outliers. Padrão <code class="docutils literal notranslate"><span class="pre">'iqr'</span></code>.</p>
+</dd>
+<dt>outlier_threshold<span class="classifier">float, opcional</span></dt><dd><p>Threshold do método. Se <code class="docutils literal notranslate"><span class="pre">None</span></code>, usa o padrão de cada método.</p>
+</dd>
+<dt>remover_outliers<span class="classifier">bool, opcional</span></dt><dd><p>Compatibilidade com API antiga. <code class="docutils literal notranslate"><span class="pre">True</span></code> = <code class="docutils literal notranslate"><span class="pre">'iqr'</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code> = <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Diretório para salvar figuras (PNG).</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe figuras interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h3>Retorna<a class="headerlink" href="#id22" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Dicionário com <code class="docutils literal notranslate"><span class="pre">df_to_hc</span></code>, <code class="docutils literal notranslate"><span class="pre">df_sem_outliers</span></code>, <code class="docutils literal notranslate"><span class="pre">df_original</span></code>,
+<code class="docutils literal notranslate"><span class="pre">scaler</span></code>, <code class="docutils literal notranslate"><span class="pre">pca_std</span></code>, <code class="docutils literal notranslate"><span class="pre">colunas_numericas</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-pipeline.hierarchical_clustering">
+<span id="modulo-hierarchical-clustering"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code><a class="headerlink" href="#module-pipeline.hierarchical_clustering" title="Link para este cabeçalho"></a></h2>
+<section id="id23">
+<h3>Módulo Hierarchical Clustering<a class="headerlink" href="#id23" title="Link para este cabeçalho"></a></h3>
+<p>Aplicação do algoritmo de clusterização hierárquica em dados de exoplanetas,
+com base nos componentes principais obtidos na etapa de pré-processamento.</p>
+<p>Este módulo realiza a formação de clusters por meio do método hierárquico,
+sua visualização no espaço PCA e a análise da similaridade dos agrupamentos
+em relação às características da Terra.</p>
+<p>As etapas são organizadas de forma modular, permitindo a extensão gradual
+das análises ao longo do desenvolvimento do projeto.</p>
+<section id="inclui">
+<h4>Inclui<a class="headerlink" href="#inclui" title="Link para este cabeçalho"></a></h4>
+<ul class="simple">
+<li><p>Aplicação do algoritmo de clusterização hierárquica (linkage)</p></li>
+<li><p>Extração dos rótulos dos clusters</p></li>
+<li><p>Plot do dendrograma</p></li>
+<li><p>Visualização dos clusters no espaço PCA (scatter plot)</p></li>
+<li><p>Avaliação dos clusters em relação a planetas terrestres</p></li>
+<li><p>Análise de proximidade aos parâmetros terrestres</p></li>
+<li><p>Cálculo da distância de cada cluster ao centro terrestre (Manhattan ou Euclidiana)</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.hc_application">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">hc_application</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_to_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ward'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#hc_application"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.hc_application" title="Link para esta definição"></a></dt>
+<dd><p>3.0 - Aplicação do Hierarchical Clustering.</p>
+<p>Aplica o algoritmo de agrupamento hierárquico usando o método de linkage
+especificado sobre as variáveis físicas padronizadas.</p>
+<section id="id24">
+<h3>Parâmetros<a class="headerlink" href="#id24" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_to_hc<span class="classifier">pandas.DataFrame</span></dt><dd><p>Dados de entrada (contendo as 5 variáveis físicas padronizadas).</p>
+</dd>
+<dt>method<span class="classifier">str, opcional</span></dt><dd><p>Método de linkage (default: <code class="docutils literal notranslate"><span class="pre">'ward'</span></code>).</p>
+</dd>
+<dt>n_clusters<span class="classifier">int, opcional</span></dt><dd><p>Número de clusters desejados (default: 4).</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h3>Retorna<a class="headerlink" href="#id25" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>Z<span class="classifier">numpy.ndarray</span></dt><dd><p>Matriz de linkage.</p>
+</dd>
+<dt>clusters<span class="classifier">numpy.ndarray</span></dt><dd><p>Rótulos dos clusters atribuídos a cada amostra.</p>
+</dd>
+<dt>dist_corte<span class="classifier">float</span></dt><dd><p>Distância de corte correspondente à formação dos clusters.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.plot_dendrogram">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">plot_dendrogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_corte</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#plot_dendrogram"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.plot_dendrogram" title="Link para esta definição"></a></dt>
+<dd><p>3.2 - Dendrograma do Agrupamento Hierárquico.</p>
+<p>Plota o dendrograma correspondente à matriz de linkage obtida
+pelo algoritmo de clusterização hierárquica. Quando fornecida, a
+distância de corte é utilizada para destacar visualmente a separação
+dos clusters no dendrograma.</p>
+<section id="id26">
+<h3>Parâmetros<a class="headerlink" href="#id26" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>Z<span class="classifier">numpy.ndarray</span></dt><dd><p>Matriz de linkage gerada pelo algoritmo de clusterização.</p>
+</dd>
+<dt>dist_corte<span class="classifier">float, opcional</span></dt><dd><p>Distância de corte utilizada para visualização da formação dos
+clusters (default: None).</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva o dendrograma como PNG neste diretório.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code> (padrão), exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id27">
+<h3>Retorna<a class="headerlink" href="#id27" title="Link para este cabeçalho"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.scatter_plot_PCA">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">scatter_plot_PCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_pca</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#scatter_plot_PCA"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.scatter_plot_PCA" title="Link para esta definição"></a></dt>
+<dd><p>Scatter dos clusters no espaço PCA 2D.</p>
+<p>Plota os pontos coloridos por cluster no espaço formado por PC1 e PC2,
+permitindo visualização da separação das classes obtidas pelo
+clustering hierárquico.</p>
+<section id="id28">
+<h3>Parâmetros<a class="headerlink" href="#id28" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>X_pca<span class="classifier">numpy.ndarray ou pandas.DataFrame</span></dt><dd><p>Coordenadas no espaço PCA (2 dimensões).</p>
+</dd>
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Rótulos de cluster de cada ponto.</p>
+</dd>
+<dt>pca_model<span class="classifier">sklearn.decomposition.PCA, opcional</span></dt><dd><p>Modelo PCA ajustado (para exibir % variância nos eixos).</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva como <code class="docutils literal notranslate"><span class="pre">clusters_pca.png</span></code>.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h3>Retorna<a class="headerlink" href="#id29" title="Link para este cabeçalho"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.extr_rot_clusters">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">extr_rot_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_to_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#extr_rot_clusters"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.extr_rot_clusters" title="Link para esta definição"></a></dt>
+<dd><p>3.3 - Extração dos rótulos dos clusters.</p>
+<p>Constrói um DataFrame com o nome (ou índice) de cada planeta e o
+cluster ao qual foi atribuído.</p>
+<section id="id30">
+<h3>Parâmetros<a class="headerlink" href="#id30" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_to_hc<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com os dados tratados.</p>
+</dd>
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Rótulos dos clusters.</p>
+</dd>
+</dl>
+</section>
+<section id="id31">
+<h3>Retorna<a class="headerlink" href="#id31" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>rotulos_clusters<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com colunas <code class="docutils literal notranslate"><span class="pre">Planeta</span></code> (índice do df) e <code class="docutils literal notranslate"><span class="pre">Cluster</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.carregar_ranges_padronizados">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">carregar_ranges_padronizados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#carregar_ranges_padronizados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.carregar_ranges_padronizados" title="Link para esta definição"></a></dt>
+<dd><p>Carrega o JSON de ranges terrestres do disco.</p>
+<section id="id32">
+<h3>Parâmetros<a class="headerlink" href="#id32" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho<span class="classifier">str</span></dt><dd><p>Caminho do arquivo JSON produzido por
+<a class="reference internal" href="#pipeline.preprocessing.ranges_terrestres" title="pipeline.preprocessing.ranges_terrestres"><code class="xref py py-func docutils literal notranslate"><span class="pre">pipeline.preprocessing.ranges_terrestres()</span></code></a>.</p>
+</dd>
+</dl>
+</section>
+<section id="id33">
+<h3>Retorna<a class="headerlink" href="#id33" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Dicionário <code class="docutils literal notranslate"><span class="pre">{variavel:</span> <span class="pre">[z_min,</span> <span class="pre">z_max]}</span></code> com faixas terrestres
+em espaço padronizado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.analise_proximidade_terra">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">analise_proximidade_terra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_to_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges_padronizados</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas_numericas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrica</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'manhattan'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#analise_proximidade_terra"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.analise_proximidade_terra" title="Link para esta definição"></a></dt>
+<dd><p>3.4 - Análise de Proximidade aos Parâmetros Terrestres.</p>
+<p>Calcula a distância entre o centro médio de cada cluster e o centro
+terrestre definido no espaço padronizado (z-score), identificando o
+cluster mais próximo (candidato TT) e o mais distante (candidato NT).</p>
+<section id="metricas-disponiveis">
+<h3>Métricas disponíveis<a class="headerlink" href="#metricas-disponiveis" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p><strong>manhattan</strong> (padrão, usada no pipeline original): soma dos módulos
+das diferenças, <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">Σ</span> <span class="pre">|μ_c[v]</span> <span class="pre">-</span> <span class="pre">centro[v]|</span></code>. Menos sensível a
+diferenças grandes em uma única variável.</p></li>
+<li><p><strong>euclidiana</strong> (L2): raiz da soma dos quadrados,
+<code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">√(Σ</span> <span class="pre">(μ_c[v]</span> <span class="pre">-</span> <span class="pre">centro[v])²)</span></code>. Pune mais fortemente diferenças
+grandes em qualquer dimensão.</p></li>
+</ul>
+</section>
+<section id="id34">
+<h3>Método<a class="headerlink" href="#id34" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Para cada cluster <code class="docutils literal notranslate"><span class="pre">c</span></code>, calcula a média das 5 variáveis físicas
+padronizadas.</p></li>
+<li><p>Calcula a distância (Manhattan ou Euclidiana) dessa média ao centro
+terrestre (média das faixas em z-space).</p></li>
+<li><p>Ordena os clusters pela distância ascendente.</p></li>
+<li><p>Cluster com menor distância → TT (mais próximo).</p></li>
+<li><p>Cluster com maior distância → NT (mais distante).</p></li>
+</ul>
+</section>
+<section id="id35">
+<h3>Parâmetros<a class="headerlink" href="#id35" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_to_hc<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame contendo as variáveis físicas padronizadas.</p>
+</dd>
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Vetor de rótulos de cluster (mesma ordem de df_to_hc).</p>
+</dd>
+<dt>ranges_padronizados<span class="classifier">dict</span></dt><dd><p>Faixas terrestres em espaço padronizado.</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Nomes das variáveis físicas.</p>
+</dd>
+<dt>metrica<span class="classifier">{‘manhattan’, ‘euclidiana’}, opcional</span></dt><dd><p>Métrica de distância. Padrão <code class="docutils literal notranslate"><span class="pre">'manhattan'</span></code> (preserva
+comportamento do pipeline original).</p>
+</dd>
+</dl>
+</section>
+<section id="id36">
+<h3>Retorna<a class="headerlink" href="#id36" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>distancias<span class="classifier">pandas.Series</span></dt><dd><p>Distâncias de cada cluster ao centro terrestre, ordenadas
+ascendente.</p>
+</dd>
+<dt>cluster_mais_proximo<span class="classifier">int</span></dt><dd><p>Cluster identificado como TT (menor distância).</p>
+</dd>
+<dt>cluster_mais_distante<span class="classifier">int</span></dt><dd><p>Cluster identificado como NT (maior distância).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Se o número de amostras não coincide com o número de clusters, ou
+    se <code class="docutils literal notranslate"><span class="pre">metrica</span></code> for inválida.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.cluster_info_json">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">cluster_info_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_mais_proximo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_mais_distante</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#cluster_info_json"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.cluster_info_json" title="Link para esta definição"></a></dt>
+<dd><p>Exporta informações de proximidade dos clusters em formato JSON.</p>
+<p>Persiste as informações sobre qual cluster é considerado TT (mais próximo
+da Terra) e qual é NT (mais distante), para uso pela etapa de Label
+Propagation.</p>
+<section id="id37">
+<h3>Parâmetros<a class="headerlink" href="#id37" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>cluster_mais_proximo<span class="classifier">int</span></dt><dd><p>Cluster cujo centro está mais próximo dos parâmetros terrestres (TT).</p>
+</dd>
+<dt>cluster_mais_distante<span class="classifier">int</span></dt><dd><p>Cluster cujo centro está mais distante dos parâmetros terrestres (NT).</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do arquivo JSON a ser salvo.</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h3>Retorna<a class="headerlink" href="#id38" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Dicionário contendo as informações salvas
+(<code class="docutils literal notranslate"><span class="pre">cluster_mais_proximo</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster_mais_distante</span></code>).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.hierarchical_clustering.main">
+<span class="sig-prename descclassname"><span class="pre">pipeline.hierarchical_clustering.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho_entrada</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_info_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metodo_linkage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ward'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrica_proximidade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'manhattan'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/hierarchical_clustering.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.hierarchical_clustering.main" title="Link para esta definição"></a></dt>
+<dd><p>Executa toda a etapa 2 (hierarchical clustering) do pipeline.</p>
+<p>Encadeia:
+<a class="reference internal" href="#pipeline.hierarchical_clustering.hc_application" title="pipeline.hierarchical_clustering.hc_application"><code class="xref py py-func docutils literal notranslate"><span class="pre">hc_application()</span></code></a> → <a class="reference internal" href="#pipeline.hierarchical_clustering.plot_dendrogram" title="pipeline.hierarchical_clustering.plot_dendrogram"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a> →
+<a class="reference internal" href="#pipeline.hierarchical_clustering.scatter_plot_PCA" title="pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="xref py py-func docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a> → <a class="reference internal" href="#pipeline.hierarchical_clustering.carregar_ranges_padronizados" title="pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="xref py py-func docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a> →
+<a class="reference internal" href="#pipeline.hierarchical_clustering.analise_proximidade_terra" title="pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="xref py py-func docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a> → <a class="reference internal" href="#pipeline.hierarchical_clustering.cluster_info_json" title="pipeline.hierarchical_clustering.cluster_info_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a>.</p>
+<section id="id39">
+<h3>Parâmetros<a class="headerlink" href="#id39" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho_entrada<span class="classifier">str</span></dt><dd><p>Caminho do Excel produzido pela etapa 1 (preprocessing).</p>
+</dd>
+<dt>caminho_ranges<span class="classifier">str</span></dt><dd><p>Caminho do JSON com as faixas terrestres padronizadas.</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do Excel de saída (entrada da etapa 3).</p>
+</dd>
+<dt>caminho_info_json<span class="classifier">str</span></dt><dd><p>Caminho do JSON com identificação dos clusters TT/NT.</p>
+</dd>
+<dt>n_clusters<span class="classifier">int, opcional</span></dt><dd><p>Número de clusters a formar (padrão 4).</p>
+</dd>
+<dt>metodo_linkage<span class="classifier">str, opcional</span></dt><dd><p>Método de linkage (padrão <code class="docutils literal notranslate"><span class="pre">'ward'</span></code>).</p>
+</dd>
+<dt>metrica_proximidade<span class="classifier">{‘manhattan’, ‘euclidiana’}, opcional</span></dt><dd><p>Métrica para identificar TT/NT. Padrão <code class="docutils literal notranslate"><span class="pre">'manhattan'</span></code>.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Diretório para salvar figuras.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe figuras interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id40">
+<h3>Retorna<a class="headerlink" href="#id40" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Chaves <code class="docutils literal notranslate"><span class="pre">df_lp</span></code>, <code class="docutils literal notranslate"><span class="pre">clusters</span></code>, <code class="docutils literal notranslate"><span class="pre">distancias</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cluster_mais_proximo</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster_mais_distante</span></code>, <code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-pipeline.label_propagation">
+<span id="modulo-label-propagation"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code><a class="headerlink" href="#module-pipeline.label_propagation" title="Link para este cabeçalho"></a></h2>
+<section id="id41">
+<h3>Módulo Label Propagation<a class="headerlink" href="#id41" title="Link para este cabeçalho"></a></h3>
+<p>Etapa semi-supervisionada do pipeline. Cria rótulos iniciais a partir da
+identificação de cluster TT (Tipo Terrestre) e cluster NT (Não Terrestre)
+realizada na etapa 2, deixando os demais planetas como não rotulados (-1).
+Em seguida, propaga esses rótulos pelo restante do dataset usando o
+algoritmo LabelPropagation do scikit-learn com kernel k-NN.</p>
+<section id="convencao-de-rotulos">
+<h4>Convenção de rótulos<a class="headerlink" href="#convencao-de-rotulos" title="Link para este cabeçalho"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> : não rotulado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> : TT (Tipo Terrestre)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> : NT (Não Terrestre)</p></li>
+</ul>
+</section>
+<section id="id42">
+<h4>Inclui<a class="headerlink" href="#id42" title="Link para este cabeçalho"></a></h4>
+<ul class="simple">
+<li><p>Criação dos rótulos semi-supervisionados iniciais (y_semi)</p></li>
+<li><p>Aplicação do algoritmo Label Propagation</p></li>
+<li><p>Visualização dos rótulos propagados no espaço PCA</p></li>
+<li><p>Exportação do dataset final para uso pelo SVM</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.carregar_info_proximidade">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">carregar_info_proximidade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#carregar_info_proximidade"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.carregar_info_proximidade" title="Link para esta definição"></a></dt>
+<dd><p>Carrega o JSON com identificação dos clusters TT e NT.</p>
+<p>Lê o arquivo produzido por
+<a class="reference internal" href="#pipeline.hierarchical_clustering.cluster_info_json" title="pipeline.hierarchical_clustering.cluster_info_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">pipeline.hierarchical_clustering.cluster_info_json()</span></code></a>.</p>
+<section id="id43">
+<h3>Parâmetros<a class="headerlink" href="#id43" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho<span class="classifier">str</span></dt><dd><p>Caminho do arquivo JSON.</p>
+</dd>
+</dl>
+</section>
+<section id="id44">
+<h3>Retorna<a class="headerlink" href="#id44" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Dicionário com chaves <code class="docutils literal notranslate"><span class="pre">cluster_mais_proximo</span></code> (TT) e
+<code class="docutils literal notranslate"><span class="pre">cluster_mais_distante</span></code> (NT).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.label_creation">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">label_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_mais_proximo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_mais_distante</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#label_creation"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.label_creation" title="Link para esta definição"></a></dt>
+<dd><p>4.0 - Criação dos Rótulos Semi-Supervisionados (y_semi).</p>
+<p>Constrói o vetor inicial de rótulos com a convenção:</p>
+<ul class="simple">
+<li><p>Cluster mais próximo do centro terrestre → rótulo <code class="docutils literal notranslate"><span class="pre">1</span></code> (TT)</p></li>
+<li><p>Cluster mais distante do centro terrestre → rótulo <code class="docutils literal notranslate"><span class="pre">0</span></code> (NT)</p></li>
+<li><p>Demais clusters → rótulo <code class="docutils literal notranslate"><span class="pre">-1</span></code> (não rotulado, será preenchido pelo LP)</p></li>
+</ul>
+<section id="id45">
+<h3>Parâmetros<a class="headerlink" href="#id45" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Rótulos de cluster do hierarchical clustering.</p>
+</dd>
+<dt>cluster_mais_proximo<span class="classifier">int</span></dt><dd><p>Índice do cluster identificado como TT.</p>
+</dd>
+<dt>cluster_mais_distante<span class="classifier">int</span></dt><dd><p>Índice do cluster identificado como NT.</p>
+</dd>
+</dl>
+</section>
+<section id="id46">
+<h3>Retorna<a class="headerlink" href="#id46" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>y_semi<span class="classifier">numpy.ndarray</span></dt><dd><p>Vetor de rótulos iniciais (-1, 0 ou 1).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.label_propagation">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">label_propagation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_semi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#label_propagation"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.label_propagation" title="Link para esta definição"></a></dt>
+<dd><p>4.1 - Aplicação do Label Propagation.</p>
+<p>Aplica o algoritmo <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.semi_supervised.LabelPropagation</span></code>
+com kernel k-NN sobre os dados padronizados, propagando os rótulos
+conhecidos (TT/NT) para os planetas inicialmente não rotulados.</p>
+<p>Valida também a acurácia nos rótulos originais (deve ser próxima de 100%
+porque LP idealmente respeita as seeds).</p>
+<section id="id47">
+<h3>Parâmetros<a class="headerlink" href="#id47" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>X<span class="classifier">array-like</span></dt><dd><p>Dados de entrada (5 variáveis físicas padronizadas).</p>
+</dd>
+<dt>y_semi<span class="classifier">numpy.ndarray</span></dt><dd><p>Vetor de rótulos iniciais (com -1 nos não rotulados).</p>
+</dd>
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Rótulos de cluster do HC (usado para crosstab de diagnóstico).</p>
+</dd>
+<dt>n_neighbors<span class="classifier">int, opcional</span></dt><dd><p>Número de vizinhos no kernel k-NN (padrão 7).</p>
+</dd>
+<dt>max_iter<span class="classifier">int, opcional</span></dt><dd><p>Iterações máximas do algoritmo (padrão 1000).</p>
+</dd>
+</dl>
+</section>
+<section id="id48">
+<h3>Retorna<a class="headerlink" href="#id48" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>labels_final<span class="classifier">numpy.ndarray</span></dt><dd><p>Vetor de rótulos após propagação (todos preenchidos com 0 ou 1).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.plot_pca">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">plot_pca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_pca</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_semi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#plot_pca"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.plot_pca" title="Link para esta definição"></a></dt>
+<dd><p>4.2 - Visualização dos rótulos propagados no espaço PCA 2D.</p>
+<p>Plota o scatter dos planetas coloridos por rótulo final (TT/NT), com
+destaque circular nos exemplos inicialmente rotulados (seeds).</p>
+<section id="id49">
+<h3>Parâmetros<a class="headerlink" href="#id49" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>X_pca<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame contendo colunas PC1 e PC2.</p>
+</dd>
+<dt>labels_final<span class="classifier">array-like</span></dt><dd><p>Rótulos finais após propagação (0 ou 1).</p>
+</dd>
+<dt>y_semi<span class="classifier">array-like</span></dt><dd><p>Rótulos iniciais (com -1 nos não rotulados).</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva como <code class="docutils literal notranslate"><span class="pre">label_propagation_pca.png</span></code>.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id50">
+<h3>Retorna<a class="headerlink" href="#id50" title="Link para este cabeçalho"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.export_svm_dataset">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">export_svm_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_lp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#export_svm_dataset"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.export_svm_dataset" title="Link para esta definição"></a></dt>
+<dd><p>4.3 - Exportação do dataset final para uso pelo SVM.</p>
+<p>Constrói o DataFrame com:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pl_name</span></code>: nome do planeta</p></li>
+<li><p>as 5 variáveis físicas padronizadas</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_hc</span></code>: rótulo do hierarchical clustering</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">label_lp</span></code>: rótulo final após label propagation (0 ou 1)</p></li>
+</ul>
+<section id="id51">
+<h3>Parâmetros<a class="headerlink" href="#id51" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_base<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com colunas <code class="docutils literal notranslate"><span class="pre">pl_name</span></code>, as 5 features físicas e
+<code class="docutils literal notranslate"><span class="pre">cluster_hc</span></code>.</p>
+</dd>
+<dt>clusters<span class="classifier">array-like</span></dt><dd><p>Rótulos de cluster do HC.</p>
+</dd>
+<dt>labels_lp<span class="classifier">array-like</span></dt><dd><p>Rótulos após label propagation.</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do Excel de saída (entrada da etapa 4).</p>
+</dd>
+</dl>
+</section>
+<section id="id52">
+<h3>Retorna<a class="headerlink" href="#id52" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>DFsvm<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame exportado.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Se os tamanhos de <code class="docutils literal notranslate"><span class="pre">clusters</span></code> ou <code class="docutils literal notranslate"><span class="pre">labels_lp</span></code> não coincidem com
+    o de <code class="docutils literal notranslate"><span class="pre">df_base</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.label_propagation.main">
+<span class="sig-prename descclassname"><span class="pre">pipeline.label_propagation.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho_entrada</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_info_proximidade</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/label_propagation.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.label_propagation.main" title="Link para esta definição"></a></dt>
+<dd><p>Executa toda a etapa 3 (label propagation) do pipeline.</p>
+<p>Encadeia:
+<a class="reference internal" href="#pipeline.label_propagation.carregar_info_proximidade" title="pipeline.label_propagation.carregar_info_proximidade"><code class="xref py py-func docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a> → <a class="reference internal" href="#pipeline.label_propagation.label_creation" title="pipeline.label_propagation.label_creation"><code class="xref py py-func docutils literal notranslate"><span class="pre">label_creation()</span></code></a> →
+<a class="reference internal" href="#pipeline.label_propagation.label_propagation" title="pipeline.label_propagation.label_propagation"><code class="xref py py-func docutils literal notranslate"><span class="pre">label_propagation()</span></code></a> → <a class="reference internal" href="#pipeline.label_propagation.plot_pca" title="pipeline.label_propagation.plot_pca"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_pca()</span></code></a> →
+<a class="reference internal" href="#pipeline.label_propagation.export_svm_dataset" title="pipeline.label_propagation.export_svm_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a>.</p>
+<section id="id53">
+<h3>Parâmetros<a class="headerlink" href="#id53" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho_entrada<span class="classifier">str</span></dt><dd><p>Caminho do Excel produzido pela etapa 2.</p>
+</dd>
+<dt>caminho_info_proximidade<span class="classifier">str</span></dt><dd><p>Caminho do JSON com identificação TT/NT.</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do Excel de saída (entrada da etapa 4).</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Diretório para salvar figuras.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe figuras interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id54">
+<h3>Retorna<a class="headerlink" href="#id54" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Chaves <code class="docutils literal notranslate"><span class="pre">DFsvm</span></code>, <code class="docutils literal notranslate"><span class="pre">labels_final</span></code>, <code class="docutils literal notranslate"><span class="pre">y_semi</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-pipeline.svm">
+<span id="modulo-svm"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code><a class="headerlink" href="#module-pipeline.svm" title="Link para este cabeçalho"></a></h2>
+<section id="modulo-support-vector-machine-svm">
+<h3>Módulo Support Vector Machine (SVM)<a class="headerlink" href="#modulo-support-vector-machine-svm" title="Link para este cabeçalho"></a></h3>
+<p>Etapa supervisionada final do pipeline. Treina um classificador SVM (kernel
+RBF) sobre os pseudo-rótulos gerados pelo Label Propagation e avalia seu
+desempenho em conjuntos de ajuste (15%) e teste final (10%) estratificados.</p>
+<section id="id55">
+<h4>Inclui<a class="headerlink" href="#id55" title="Link para este cabeçalho"></a></h4>
+<ul class="simple">
+<li><p>Separação estratificada dos dados em treino (75%), ajuste (15%) e teste (10%)</p></li>
+<li><p>Treinamento do SVM</p></li>
+<li><p>Avaliação com matriz de confusão, precision, recall, F1 e acurácia</p></li>
+<li><p>Captura dos nomes dos exoplanetas do conjunto de teste</p></li>
+<li><p>Análise detalhada dos erros (VP/VN/FP/FN)</p></li>
+<li><p>Exportação dos resultados em CSV</p></li>
+<li><p>Tratamento gracioso do caso degenerado (LP produz apenas uma classe)</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.separacao_de_dados">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">separacao_de_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotulos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">57</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#separacao_de_dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.separacao_de_dados" title="Link para esta definição"></a></dt>
+<dd><p>5.0 - Separação estratificada dos dados (75 / 15 / 10).</p>
+<p>Divide o dataset em três subconjuntos preservando a proporção de classes:</p>
+<ul class="simple">
+<li><p>Treino: 75% (para ajuste dos parâmetros do SVM)</p></li>
+<li><p>Ajuste: 15% (para validação durante desenvolvimento)</p></li>
+<li><p>Teste final: 10% (para avaliação final em dados nunca vistos)</p></li>
+</ul>
+<p>Os índices originais também são propagados para permitir recuperar os
+nomes dos planetas do conjunto de teste.</p>
+<section id="id56">
+<h3>Parâmetros<a class="headerlink" href="#id56" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df<span class="classifier">array-like ou pandas.DataFrame</span></dt><dd><p>Features das amostras.</p>
+</dd>
+<dt>rotulos<span class="classifier">array-like</span></dt><dd><p>Vetor de rótulos (0 ou 1).</p>
+</dd>
+<dt>random_state<span class="classifier">int, opcional</span></dt><dd><p>Semente para reprodutibilidade (padrão 57).</p>
+</dd>
+</dl>
+</section>
+<section id="id57">
+<h3>Retorna<a class="headerlink" href="#id57" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>X_train, X_adj, X_test<span class="classifier">array-like</span></dt><dd><p>Features para cada conjunto.</p>
+</dd>
+<dt>y_train, y_adj, y_test<span class="classifier">array-like</span></dt><dd><p>Rótulos correspondentes.</p>
+</dd>
+<dt>idx_test<span class="classifier">numpy.ndarray</span></dt><dd><p>Índices originais das amostras do conjunto de teste.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Se alguma classe tiver menos de 2 amostras (impossibilita split
+    estratificado).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.treinamento_modelo_svm">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">treinamento_modelo_svm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scale'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">57</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#treinamento_modelo_svm"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.treinamento_modelo_svm" title="Link para esta definição"></a></dt>
+<dd><p>5.1 - Treinamento do SVM.</p>
+<p>Treina um classificador SVM com kernel RBF sobre o conjunto de treino.</p>
+<section id="id58">
+<h3>Parâmetros<a class="headerlink" href="#id58" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>X_train<span class="classifier">array-like</span></dt><dd><p>Features do conjunto de treino.</p>
+</dd>
+<dt>y_train<span class="classifier">array-like</span></dt><dd><p>Rótulos do conjunto de treino.</p>
+</dd>
+<dt>C<span class="classifier">float, opcional</span></dt><dd><p>Parâmetro de regularização (padrão 1.0).</p>
+</dd>
+<dt>gamma<span class="classifier">str ou float, opcional</span></dt><dd><p>Coeficiente do kernel RBF (padrão <code class="docutils literal notranslate"><span class="pre">'scale'</span></code>).</p>
+</dd>
+<dt>random_state<span class="classifier">int, opcional</span></dt><dd><p>Semente para reprodutibilidade (padrão 57).</p>
+</dd>
+</dl>
+</section>
+<section id="id59">
+<h3>Retorna<a class="headerlink" href="#id59" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>modelo<span class="classifier">sklearn.svm.SVC</span></dt><dd><p>Modelo SVM treinado.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.avaliacao_modelo">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">avaliacao_modelo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nome_conjunto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#avaliacao_modelo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.avaliacao_modelo" title="Link para esta definição"></a></dt>
+<dd><p>5.2 - Avaliação do modelo em um conjunto de dados.</p>
+<p>Aplica o modelo, gera matriz de confusão, imprime o classification_report
+e retorna a acurácia. Aceita conjuntos de ajuste ou teste final.</p>
+<section id="id60">
+<h3>Parâmetros<a class="headerlink" href="#id60" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>modelo<span class="classifier">sklearn.svm.SVC</span></dt><dd><p>Modelo SVM treinado.</p>
+</dd>
+<dt>X<span class="classifier">array-like</span></dt><dd><p>Features do conjunto a avaliar.</p>
+</dd>
+<dt>y<span class="classifier">array-like</span></dt><dd><p>Rótulos reais.</p>
+</dd>
+<dt>nome_conjunto<span class="classifier">str</span></dt><dd><p>Nome descritivo (aparece no título e nome do PNG).</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Se fornecido, salva matriz de confusão como
+<code class="docutils literal notranslate"><span class="pre">matriz_confusao_&lt;nome&gt;.png</span></code>.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id61">
+<h3>Retorna<a class="headerlink" href="#id61" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>previsoes<span class="classifier">numpy.ndarray</span></dt><dd><p>Vetor de previsões do modelo.</p>
+</dd>
+<dt>matriz<span class="classifier">numpy.ndarray</span></dt><dd><p>Matriz de confusão 2x2.</p>
+</dd>
+<dt>acuracia<span class="classifier">float</span></dt><dd><p>Acurácia calculada.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.captura_nomes_exoplanetas">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">captura_nomes_exoplanetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_teste</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previsoes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#captura_nomes_exoplanetas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.captura_nomes_exoplanetas" title="Link para esta definição"></a></dt>
+<dd><p>5.3 - Captura dos nomes dos exoplanetas do conjunto de teste.</p>
+<p>Constrói uma tabela relacionando o nome de cada planeta do conjunto de
+teste, seu rótulo real, sua previsão e se a classificação foi correta.</p>
+<section id="id62">
+<h3>Parâmetros<a class="headerlink" href="#id62" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com coluna <code class="docutils literal notranslate"><span class="pre">pl_name</span></code>.</p>
+</dd>
+<dt>idx_teste<span class="classifier">array-like</span></dt><dd><p>Índices posicionais (via <code class="docutils literal notranslate"><span class="pre">iloc</span></code>) das amostras do conjunto de teste.</p>
+</dd>
+<dt>y_test<span class="classifier">array-like</span></dt><dd><p>Rótulos reais do conjunto de teste.</p>
+</dd>
+<dt>previsoes<span class="classifier">array-like</span></dt><dd><p>Previsões do modelo.</p>
+</dd>
+</dl>
+</section>
+<section id="id63">
+<h3>Retorna<a class="headerlink" href="#id63" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>tabela<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com colunas <code class="docutils literal notranslate"><span class="pre">nome_planeta</span></code>, <code class="docutils literal notranslate"><span class="pre">rotulo_original</span></code>,
+<code class="docutils literal notranslate"><span class="pre">rotulo_predito</span></code>, <code class="docutils literal notranslate"><span class="pre">previsao_correta</span></code>, <code class="docutils literal notranslate"><span class="pre">categoria_original</span></code>,
+<code class="docutils literal notranslate"><span class="pre">categoria_predita</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.analise_detalhada_erros">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">analise_detalhada_erros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matriz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#analise_detalhada_erros"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.analise_detalhada_erros" title="Link para esta definição"></a></dt>
+<dd><p>5.4 - Análise detalhada dos erros.</p>
+<p>Lista os planetas classificados incorretamente e imprime estatísticas
+dos verdadeiros/falsos positivos/negativos.</p>
+<section id="id64">
+<h3>Parâmetros<a class="headerlink" href="#id64" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>tabela<span class="classifier">pandas.DataFrame</span></dt><dd><p>Tabela retornada por <a class="reference internal" href="#pipeline.svm.captura_nomes_exoplanetas" title="pipeline.svm.captura_nomes_exoplanetas"><code class="xref py py-func docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a>.</p>
+</dd>
+<dt>matriz<span class="classifier">numpy.ndarray</span></dt><dd><p>Matriz de confusão 2x2.</p>
+</dd>
+</dl>
+</section>
+<section id="id65">
+<h3>Retorna<a class="headerlink" href="#id65" title="Link para este cabeçalho"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.salvar_resultados_completos">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">salvar_resultados_completos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acuracia_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#salvar_resultados_completos"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.salvar_resultados_completos" title="Link para esta definição"></a></dt>
+<dd><p>5.9 - Exportação dos resultados detalhados em CSV.</p>
+<p>Salva um CSV contendo nome do planeta, categoria real, categoria
+predita e se a previsão foi correta.</p>
+<section id="id66">
+<h3>Parâmetros<a class="headerlink" href="#id66" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>tabela<span class="classifier">pandas.DataFrame</span></dt><dd><p>Tabela retornada por <a class="reference internal" href="#pipeline.svm.captura_nomes_exoplanetas" title="pipeline.svm.captura_nomes_exoplanetas"><code class="xref py py-func docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a>.</p>
+</dd>
+<dt>acuracia_final<span class="classifier">float</span></dt><dd><p>Acurácia obtida no conjunto de teste final (para reporte).</p>
+</dd>
+<dt>caminho_saida<span class="classifier">str</span></dt><dd><p>Caminho do arquivo CSV a salvar.</p>
+</dd>
+</dl>
+</section>
+<section id="id67">
+<h3>Retorna<a class="headerlink" href="#id67" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>tabela<span class="classifier">pandas.DataFrame</span></dt><dd><p>A mesma tabela recebida (para encadeamento).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.preparar_features">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">preparar_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#preparar_features"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.preparar_features" title="Link para esta definição"></a></dt>
+<dd><p>Remove colunas não-numéricas ou de rótulo para preparar as features do SVM.</p>
+<section id="id68">
+<h3>Parâmetros<a class="headerlink" href="#id68" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame carregado da etapa 3.</p>
+</dd>
+</dl>
+</section>
+<section id="id69">
+<h3>Retorna<a class="headerlink" href="#id69" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame apenas com as features padronizadas para o SVM.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.executar_svm">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">executar_svm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_original</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#executar_svm"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.executar_svm" title="Link para esta definição"></a></dt>
+<dd><p>5.10 - Pipeline completo do SVM.</p>
+<p>Encadeia todas as sub-etapas do módulo:
+<a class="reference internal" href="#pipeline.svm.separacao_de_dados" title="pipeline.svm.separacao_de_dados"><code class="xref py py-func docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a> → <a class="reference internal" href="#pipeline.svm.treinamento_modelo_svm" title="pipeline.svm.treinamento_modelo_svm"><code class="xref py py-func docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a> →
+<a class="reference internal" href="#pipeline.svm.avaliacao_modelo" title="pipeline.svm.avaliacao_modelo"><code class="xref py py-func docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a> (ajuste) → <a class="reference internal" href="#pipeline.svm.avaliacao_modelo" title="pipeline.svm.avaliacao_modelo"><code class="xref py py-func docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a> (teste) →
+<a class="reference internal" href="#pipeline.svm.captura_nomes_exoplanetas" title="pipeline.svm.captura_nomes_exoplanetas"><code class="xref py py-func docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a> → <a class="reference internal" href="#pipeline.svm.analise_detalhada_erros" title="pipeline.svm.analise_detalhada_erros"><code class="xref py py-func docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a> →
+<a class="reference internal" href="#pipeline.svm.salvar_resultados_completos" title="pipeline.svm.salvar_resultados_completos"><code class="xref py py-func docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a>.</p>
+<section id="id70">
+<h3>Parâmetros<a class="headerlink" href="#id70" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_features<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame apenas com as features numéricas do SVM.</p>
+</dd>
+<dt>df_original<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame completo com <code class="docutils literal notranslate"><span class="pre">pl_name</span></code> e <code class="docutils literal notranslate"><span class="pre">label_lp</span></code>.</p>
+</dd>
+<dt>caminho_saida_csv<span class="classifier">str</span></dt><dd><p>Caminho do CSV de resultados finais.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Diretório para salvar as matrizes de confusão.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id71">
+<h3>Retorna<a class="headerlink" href="#id71" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>modelo<span class="classifier">sklearn.svm.SVC</span></dt><dd><p>Modelo treinado.</p>
+</dd>
+<dt>tabela<span class="classifier">pandas.DataFrame</span></dt><dd><p>Resultados detalhados do conjunto de teste.</p>
+</dd>
+<dt>acuracia_final<span class="classifier">float</span></dt><dd><p>Acurácia no conjunto de teste.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.svm.main">
+<span class="sig-prename descclassname"><span class="pre">pipeline.svm.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho_entrada</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/svm.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.svm.main" title="Link para esta definição"></a></dt>
+<dd><p>Executa toda a etapa 4 (SVM) do pipeline.</p>
+<p>Trata graciosamente o caso em que o Label Propagation produziu uma
+distribuição degenerada de rótulos (uma das classes com &lt; 2 amostras),
+retornando <code class="docutils literal notranslate"><span class="pre">{&quot;acuracia&quot;:</span> <span class="pre">None,</span> <span class="pre">&quot;erro&quot;:</span> <span class="pre">...}</span></code> em vez de crashar.</p>
+<section id="id72">
+<h3>Parâmetros<a class="headerlink" href="#id72" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>caminho_entrada<span class="classifier">str</span></dt><dd><p>Caminho do Excel produzido pela etapa 3.</p>
+</dd>
+<dt>caminho_saida_csv<span class="classifier">str</span></dt><dd><p>Caminho do CSV de resultados finais.</p>
+</dd>
+<dt>save_dir<span class="classifier">str, opcional</span></dt><dd><p>Diretório para salvar figuras.</p>
+</dd>
+<dt>show<span class="classifier">bool, opcional</span></dt><dd><p>Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, exibe figuras interativamente.</p>
+</dd>
+</dl>
+</section>
+<section id="id73">
+<h3>Retorna<a class="headerlink" href="#id73" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Chaves <code class="docutils literal notranslate"><span class="pre">modelo</span></code>, <code class="docutils literal notranslate"><span class="pre">tabela</span></code>, <code class="docutils literal notranslate"><span class="pre">acuracia</span></code> (ou <code class="docutils literal notranslate"><span class="pre">None</span></code> + <code class="docutils literal notranslate"><span class="pre">erro</span></code>
+se degenerado).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-pipeline.similaridade_terra">
+<span id="modulo-similaridade-terra"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code><a class="headerlink" href="#module-pipeline.similaridade_terra" title="Link para este cabeçalho"></a></h2>
+<section id="modulo-analise-de-similaridade-terrestre">
+<h3>Módulo Análise de Similaridade Terrestre<a class="headerlink" href="#modulo-analise-de-similaridade-terrestre" title="Link para este cabeçalho"></a></h3>
+<p>Etapa complementar do pipeline. Calcula um índice contínuo (0-100%) de
+similaridade de cada exoplaneta com a Terra, no espaço padronizado
+(z-score), usando pesos por variável.</p>
+<section id="id74">
+<h4>Inclui<a class="headerlink" href="#id74" title="Link para este cabeçalho"></a></h4>
+<ul class="simple">
+<li><p>Cálculo da similaridade individual (planeta vs Terra)</p></li>
+<li><p>Aplicação em todo o dataset e ordenação dos mais similares</p></li>
+<li><p>Sanity check (Terra vs Terra deve retornar 100%)</p></li>
+<li><p>Exportação em CSV</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.similaridade_terra.calcular_similaridade_terrestre">
+<span class="sig-prename descclassname"><span class="pre">pipeline.similaridade_terra.</span></span><span class="sig-name descname"><span class="pre">calcular_similaridade_terrestre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parametros_planeta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas_numericas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pesos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/similaridade_terra.html#calcular_similaridade_terrestre"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.similaridade_terra.calcular_similaridade_terrestre" title="Link para esta definição"></a></dt>
+<dd><p>Similaridade de um planeta com a Terra no espaço padronizado.</p>
+<p>Assume que, no espaço z-score, distâncias de ~2-3 já são “muito diferentes”:</p>
+<ul class="simple">
+<li><p>distância 0 → 100% similar (mesmo ponto)</p></li>
+<li><p>distância 3 → ~0% similar (muito diferente)</p></li>
+<li><p>similaridade_var = <code class="docutils literal notranslate"><span class="pre">max(0,</span> <span class="pre">100</span> <span class="pre">-</span> <span class="pre">distancia</span> <span class="pre">*</span> <span class="pre">33.33)</span></code> por variável</p></li>
+<li><p>similaridade final = média ponderada pelos pesos</p></li>
+</ul>
+<section id="id75">
+<h3>Parâmetros<a class="headerlink" href="#id75" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>parametros_planeta<span class="classifier">dict</span></dt><dd><p>Valores físicos do planeta (chaves em <code class="docutils literal notranslate"><span class="pre">colunas_numericas</span></code>).</p>
+</dd>
+<dt>scaler<span class="classifier">sklearn.preprocessing.StandardScaler</span></dt><dd><p>Scaler ajustado na etapa 1 (deve ser o MESMO usado no treino).</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Nomes das variáveis físicas.</p>
+</dd>
+<dt>pesos<span class="classifier">dict, opcional</span></dt><dd><p>Pesos por variável. Padrão <code class="xref py py-data docutils literal notranslate"><span class="pre">PESOS_PADRAO</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id76">
+<h3>Retorna<a class="headerlink" href="#id76" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>float</dt><dd><p>Similaridade de 0 a 100%.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.similaridade_terra.main">
+<span class="sig-prename descclassname"><span class="pre">pipeline.similaridade_terra.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_sem_outliers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colunas_numericas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caminho_saida_csv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/similaridade_terra.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.similaridade_terra.main" title="Link para esta definição"></a></dt>
+<dd><p>Executa a etapa 5 (similaridade com a Terra) do pipeline.</p>
+<p>Aplica <a class="reference internal" href="#pipeline.similaridade_terra.calcular_similaridade_terrestre" title="pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a> a todos os planetas do
+dataset e exporta um CSV ordenado por similaridade decrescente.</p>
+<p>Também imprime as estatísticas gerais (média, mediana, máxima, mínima)
+e um sanity check com a própria Terra (deve retornar 100%).</p>
+<section id="id77">
+<h3>Parâmetros<a class="headerlink" href="#id77" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_sem_outliers<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com valores físicos originais (contendo <code class="docutils literal notranslate"><span class="pre">pl_name</span></code> e
+as 5 variáveis físicas).</p>
+</dd>
+<dt>scaler<span class="classifier">sklearn.preprocessing.StandardScaler</span></dt><dd><p>Scaler ajustado na etapa 1.</p>
+</dd>
+<dt>colunas_numericas<span class="classifier">list of str</span></dt><dd><p>Nomes das variáveis físicas.</p>
+</dd>
+<dt>caminho_saida_csv<span class="classifier">str</span></dt><dd><p>Caminho do CSV de saída.</p>
+</dd>
+</dl>
+</section>
+<section id="id78">
+<h3>Retorna<a class="headerlink" href="#id78" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_sim<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame com colunas <code class="docutils literal notranslate"><span class="pre">nome_planeta</span></code>, <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pl_rade</span></code>, <code class="docutils literal notranslate"><span class="pre">pl_bmasse</span></code>, <code class="docutils literal notranslate"><span class="pre">pl_orbsmax</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-pipeline.diagnostics">
+<span id="modulo-diagnostics"></span><h2>Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code><a class="headerlink" href="#module-pipeline.diagnostics" title="Link para este cabeçalho"></a></h2>
+<section id="modulo-de-diagnosticos">
+<h3>Módulo de Diagnósticos<a class="headerlink" href="#modulo-de-diagnosticos" title="Link para este cabeçalho"></a></h3>
+<p>Ferramentas de diagnóstico metodológico do pipeline.</p>
+<p>Investiga duas questões críticas:</p>
+<ol class="arabic simple">
+<li><p><strong>Circularidade</strong>: quanto o SVM “aprende” além do que já estava no
+agrupamento hierárquico e no Label Propagation?</p>
+<ul class="simple">
+<li><p>Se <code class="docutils literal notranslate"><span class="pre">agreement(SVM,</span> <span class="pre">LP)</span> <span class="pre">≈</span> <span class="pre">100%</span></code>, o SVM está apenas reproduzindo o LP.</p></li>
+<li><p>Se <code class="docutils literal notranslate"><span class="pre">agreement(baseline_cluster,</span> <span class="pre">LP)</span> <span class="pre">≈</span> <span class="pre">100%</span></code>, o LP está apenas
+propagando a atribuição do cluster.</p></li>
+</ul>
+</li>
+<li><p><strong>Validação externa</strong>: os rótulos TT/NT do pipeline correspondem à
+intuição física esperada para corpos conhecidos? Testa o modelo em
+planetas do Sistema Solar e exoplanetas de referência que NUNCA
+estiveram no treino.</p></li>
+</ol>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.diagnostics.relatorio_circularidade">
+<span class="sig-prename descclassname"><span class="pre">pipeline.diagnostics.</span></span><span class="sig-name descname"><span class="pre">relatorio_circularidade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_svm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelo_svm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_mais_proximo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_mais_distante</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/diagnostics.html#relatorio_circularidade"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.diagnostics.relatorio_circularidade" title="Link para esta definição"></a></dt>
+<dd><p>Investigação da circularidade Cluster → LP → SVM.</p>
+<p>Compara três atribuições sobre TODO o dataset (sem split):</p>
+<ul class="simple">
+<li><p><strong>A) Baseline trivial</strong>: cada cluster recebe o rótulo majoritário do
+LP dentro dele. Aproximação do que o LP faria sozinho a partir do
+clustering.</p></li>
+<li><p><strong>B) Label Propagation</strong>: rótulos armazenados na coluna <code class="docutils literal notranslate"><span class="pre">label_lp</span></code>.</p></li>
+<li><p><strong>C) SVM</strong>: previsões do modelo treinado.</p></li>
+</ul>
+<p>Se <code class="docutils literal notranslate"><span class="pre">agreement(A,</span> <span class="pre">B)</span> <span class="pre">≈</span> <span class="pre">100%</span></code>, o LP agrega pouca informação além do
+clustering. Se <code class="docutils literal notranslate"><span class="pre">agreement(C,</span> <span class="pre">B)</span> <span class="pre">≈</span> <span class="pre">100%</span></code>, o SVM apenas reproduz o LP.</p>
+<section id="id79">
+<h3>Parâmetros<a class="headerlink" href="#id79" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>df_svm<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame carregado de <code class="docutils literal notranslate"><span class="pre">DFsvm.xlsx</span></code> (com <code class="docutils literal notranslate"><span class="pre">cluster_hc</span></code>,
+<code class="docutils literal notranslate"><span class="pre">label_lp</span></code> e features).</p>
+</dd>
+<dt>modelo_svm<span class="classifier">sklearn.svm.SVC</span></dt><dd><p>Modelo SVM treinado.</p>
+</dd>
+<dt>cluster_mais_proximo<span class="classifier">int</span></dt><dd><p>Cluster usado como seed TT.</p>
+</dd>
+<dt>cluster_mais_distante<span class="classifier">int</span></dt><dd><p>Cluster usado como seed NT.</p>
+</dd>
+</dl>
+</section>
+<section id="id80">
+<h3>Retorna<a class="headerlink" href="#id80" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Chaves <code class="docutils literal notranslate"><span class="pre">acc_baseline_vs_lp</span></code>, <code class="docutils literal notranslate"><span class="pre">acc_svm_vs_lp</span></code>,
+<code class="docutils literal notranslate"><span class="pre">acc_svm_vs_baseline</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pipeline.diagnostics.validacao_externa">
+<span class="sig-prename descclassname"><span class="pre">pipeline.diagnostics.</span></span><span class="sig-name descname"><span class="pre">validacao_externa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelo_svm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pipeline/diagnostics.html#validacao_externa"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#pipeline.diagnostics.validacao_externa" title="Link para esta definição"></a></dt>
+<dd><p>Validação externa em corpos conhecidos (Sistema Solar).</p>
+<p>Aplica o modelo SVM em planetas do Sistema Solar (e opcionalmente
+exoplanetas de referência). Nenhum destes corpos esteve no treino, então
+é uma validação genuína out-of-sample.</p>
+<section id="id81">
+<h3>Parâmetros<a class="headerlink" href="#id81" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>modelo_svm<span class="classifier">sklearn.svm.SVC</span></dt><dd><p>Modelo SVM treinado.</p>
+</dd>
+<dt>scaler<span class="classifier">sklearn.preprocessing.StandardScaler</span></dt><dd><p>Scaler ajustado na etapa 1 (o MESMO usado no treino).</p>
+</dd>
+<dt>corpos<span class="classifier">pandas.DataFrame, opcional</span></dt><dd><p>DataFrame customizado. Default = <code class="xref py py-data docutils literal notranslate"><span class="pre">CORPOS_REFERENCIA</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id82">
+<h3>Retorna<a class="headerlink" href="#id82" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>DataFrame com colunas <code class="docutils literal notranslate"><span class="pre">nome</span></code>, <code class="docutils literal notranslate"><span class="pre">tipo_esperado</span></code>, <code class="docutils literal notranslate"><span class="pre">predicao_svm</span></code>,
+<code class="docutils literal notranslate"><span class="pre">|z|_max</span></code> (medida de extrapolação) e <code class="docutils literal notranslate"><span class="pre">ood?</span></code>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="outliers.html" class="btn btn-neutral float-left" title="Comparação de métodos de detecção de outliers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2026, Beatriz — Iniciação Científica.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

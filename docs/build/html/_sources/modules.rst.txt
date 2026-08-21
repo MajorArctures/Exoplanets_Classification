@@ -1,0 +1,58 @@
+Referência da API
+==================
+
+Documentação gerada automaticamente a partir dos docstrings de cada módulo.
+
+Pacote ``pipeline``
+-------------------
+
+.. automodule:: pipeline
+   :members:
+
+Módulo ``preprocessing``
+-------------------------
+
+.. automodule:: pipeline.preprocessing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Módulo ``hierarchical_clustering``
+-----------------------------------
+
+.. automodule:: pipeline.hierarchical_clustering
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Módulo ``label_propagation``
+-----------------------------
+
+.. automodule:: pipeline.label_propagation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Módulo ``svm``
+--------------
+
+.. automodule:: pipeline.svm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Módulo ``similaridade_terra``
+------------------------------
+
+.. automodule:: pipeline.similaridade_terra
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Módulo ``diagnostics``
+-----------------------
+
+.. automodule:: pipeline.diagnostics
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,121 @@
+Executando no Google Colab
+===========================
+
+Todos os notebooks do projeto incluem uma célula de setup no topo que
+detecta automaticamente o ambiente e configura os caminhos apropriadamente.
+
+Setup rápido
+-------------
+
+**Passo 1**: Fazer upload do projeto compactado para o Google Drive.
+
+Sugestão de estrutura no seu Drive::
+
+   MyDrive/
+   └── exoplanetas/
+       ├── pipeline/
+       ├── notebooks/
+       ├── data/
+       ├── run_pipeline.py
+       └── requirements.txt
+
+**Passo 2**: Abrir o notebook desejado no Colab.
+
+Ao abrir ``notebooks/pipeline_completo.ipynb`` no Colab, a primeira célula
+detecta o ambiente e:
+
+1. Monta seu Google Drive.
+2. Pergunta o caminho do projeto (com um valor sugerido).
+3. Instala as dependências que faltam.
+4. Ajusta o ``sys.path`` para importar o pacote ``pipeline``.
+
+**Passo 3**: Executar as demais células normalmente.
+
+Célula de setup
+----------------
+
+A célula que é adicionada automaticamente no topo de cada notebook faz:
+
+.. code-block:: python
+
+   # ─── Setup: detecta Colab e configura ambiente ───────────
+   import sys
+   from pathlib import Path
+
+   try:
+       import google.colab
+       IN_COLAB = True
+   except ImportError:
+       IN_COLAB = False
+
+   if IN_COLAB:
+       from google.colab import drive
+       drive.mount('/content/drive')
+       # AJUSTE se necessário para o caminho do seu projeto no Drive:
+       PROJECT_ROOT = Path('/content/drive/MyDrive/exoplanetas')
+       # Instala dependências que o Colab não tem por padrão
+       import subprocess
+       subprocess.run(['pip', 'install', '-q', 'openpyxl'], check=True)
+   else:
+       PROJECT_ROOT = Path.cwd().parent
+
+   assert PROJECT_ROOT.exists(), f'Projeto não encontrado em: {PROJECT_ROOT}'
+   sys.path.insert(0, str(PROJECT_ROOT))
+
+   print(f'Ambiente: {"Google Colab" if IN_COLAB else "Local"}')
+   print(f'Projeto:  {PROJECT_ROOT}')
+
+Após essa célula, o resto do notebook funciona igual em qualquer ambiente:
+
+.. code-block:: python
+
+   from pipeline import preprocessing, hierarchical_clustering, svm
+   # ...
+
+Baixando resultados do Colab
+-----------------------------
+
+Para baixar os arquivos gerados de volta para sua máquina, adicione uma
+célula com:
+
+.. code-block:: python
+
+   if IN_COLAB:
+       from google.colab import files
+       import zipfile
+       # empacota todos os outputs em um zip
+       with zipfile.ZipFile('resultados.zip', 'w') as zf:
+           for path in (PROJECT_ROOT / 'outputs').rglob('*'):
+               if path.is_file():
+                   zf.write(path, path.relative_to(PROJECT_ROOT))
+       files.download('resultados.zip')
+
+Ou salve direto no Drive (mais confiável para arquivos grandes):
+
+.. code-block:: python
+
+   if IN_COLAB:
+       import shutil
+       shutil.copytree(
+           PROJECT_ROOT / 'outputs',
+           '/content/drive/MyDrive/exoplanetas/outputs',
+           dirs_exist_ok=True,
+       )
+
+Dicas
+------
+
+**Runtime**: o Colab funciona com CPU normal para este pipeline — não
+é necessário GPU nem TPU. A execução completa leva cerca de 1 minuto.
+
+**Sessão**: se a sessão do Colab expirar, basta abrir o notebook de novo
+e reexecutar a célula de setup. O Drive é remontado e o estado é
+reconstruído a partir dos arquivos salvos.
+
+**Debugging**: se algum import falhar, verifique se ``PROJECT_ROOT`` está
+correto e se o diretório ``pipeline/`` está lá dentro. A célula de setup
+tem um ``assert`` que falha cedo se o caminho estiver errado.
+
+**Português vs inglês**: o Colab por padrão está em inglês; o pipeline
+inteiro (inclusive prints) está em português. Isso não é problema, é só
+comentário para não estranhar mensagens em português na interface em inglês.

@@ -1,0 +1,138 @@
+Diagnóstico de circularidade
+=============================
+
+Motivação
+---------
+
+O pipeline apresenta uma dependência circular que merece análise explícita::
+
+   Clustering (HC) ──▶ Rótulos (LP) ──▶ SVM
+
+O SVM é treinado sobre rótulos gerados pelo Label Propagation, que por sua
+vez foram derivados do agrupamento hierárquico. Portanto, a "acurácia"
+do SVM mede o quanto o modelo reproduz a fronteira que o LP desenhou,
+não o quanto o modelo identifica corretamente planetas terrestres.
+
+Quantificação
+-------------
+
+O módulo :mod:`pipeline.diagnostics` implementa a função
+:func:`~pipeline.diagnostics.relatorio_circularidade` que mede três
+consistências sobre o dataset inteiro:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Comparação
+     - Concordância
+   * - Baseline trivial (cluster majoritário) vs LP
+     - 94,7%
+   * - **SVM vs LP**
+     - **99,6%**
+   * - SVM vs Baseline
+     - 95,1%
+
+Interpretação
+-------------
+
+* A concordância de 99,6% entre SVM e LP significa que o SVM praticamente
+  reproduz o LP. A "acurácia" reportada é uma métrica de **consistência
+  interna**, não de validade externa.
+* A concordância de 94,7% entre Baseline e LP indica que o LP agrega
+  pouca informação além da estrutura já contida no agrupamento hierárquico.
+* Portanto, o pipeline efetivamente aprende a fronteira do clustering,
+  com refinamentos marginais nas etapas posteriores.
+
+Como executar
+-------------
+
+.. code-block:: python
+
+   import json
+   import pandas as pd
+   from pipeline import diagnostics
+
+   df_svm = pd.read_excel("outputs/DFsvm.xlsx", index_col=0)
+   info = json.load(open("outputs/info_proximidade.json"))
+
+   # Precisa do modelo SVM treinado (importe do run anterior ou re-treine)
+   from pipeline import svm
+   res_svm = svm.main(
+       caminho_entrada="outputs/DFsvm.xlsx",
+       caminho_saida_csv="outputs/resultados_svm.csv",
+   )
+
+   diagnostics.relatorio_circularidade(
+       df_svm,
+       res_svm["modelo"],
+       info["cluster_mais_proximo"],
+       info["cluster_mais_distante"],
+   )
+
+Validação externa
+------------------
+
+O módulo também oferece :func:`~pipeline.diagnostics.validacao_externa`
+que aplica o modelo SVM em corpos do Sistema Solar (Mercúrio, Vênus, Terra,
+Marte, Júpiter, Saturno, Urano, Netuno). Como esses corpos não estão no
+treino, o resultado é uma validação verdadeiramente out-of-sample.
+
+Resultado com o pipeline padrão (XLSX + IQR):
+
+.. list-table::
+   :header-rows: 1
+
+   * - Corpo
+     - Esperado
+     - Predição SVM
+     - |z|_max
+   * - Mercúrio
+     - Rochoso
+     - TT
+     - 5,7
+   * - Vênus
+     - Rochoso Earth-like
+     - NT
+     - 10,0
+   * - Terra
+     - Referência
+     - **NT**
+     - 16,7
+   * - Marte
+     - Rochoso
+     - NT
+     - 32,2
+   * - Júpiter
+     - Gigante
+     - NT
+     - 207,7
+   * - Saturno
+     - Gigante
+     - NT
+     - 517,0
+   * - Urano
+     - Gigante
+     - NT
+     - 1476,0
+   * - Netuno
+     - Gigante
+     - NT
+     - 2895,8
+
+.. warning::
+
+   A Terra é classificada como NT. Todos os corpos apresentam ``|z|_max > 4``,
+   indicando que o modelo está **extrapolando** em todos os casos.
+
+O motivo é discutido em :doc:`outliers`: o filtro IQR remove a região do
+espaço onde a Terra vive (planetas com período orbital de aproximadamente
+1 ano são raros no catálogo por viés observacional).
+
+Recomendação para reporte
+--------------------------
+
+Ao reportar a acurácia do SVM, é mais preciso descrevê-la como
+*"consistência entre SVM e Label Propagation em amostra cheia"* do que
+como *"acurácia de classificação de terrestrialidade"*. Uma validação
+externa independente — com corpos cuja natureza física é conhecida — é
+essencial para avaliar a validade do modelo.

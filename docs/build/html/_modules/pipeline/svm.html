@@ -1,0 +1,672 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pipeline.svm &mdash; Classificação de Exoplanetas v1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=05d536ce"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Classificação de Exoplanetas
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Guias</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introducao.html">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#contexto-do-projeto">Contexto do projeto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#variaveis-utilizadas">Variáveis utilizadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#definicao-operacional-de-terrestre">Definição operacional de “terrestre”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#fluxo-do-pipeline">Fluxo do pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../uso.html">Como usar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#instalacao">Instalação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#execucao-via-linha-de-comando">Execução via linha de comando</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#uso-programatico">Uso programático</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#notebooks">Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#saidas-geradas">Saídas geradas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../colab.html">Executando no Google Colab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#setup-rapido">Setup rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#celula-de-setup">Célula de setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#baixando-resultados-do-colab">Baixando resultados do Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#dicas">Dicas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Análises metodológicas</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../circularidade.html">Diagnóstico de circularidade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#quantificacao">Quantificação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#interpretacao">Interpretação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#como-executar">Como executar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#validacao-externa">Validação externa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#recomendacao-para-reporte">Recomendação para reporte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../outliers.html">Comparação de métodos de detecção de outliers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#resultados">Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#classificacao-do-sistema-solar">Classificação do Sistema Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#discussao-por-que-mad-e-o-mais-agressivo">Discussão: por que MAD é o mais agressivo?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#conclusao-metodologica">Conclusão metodológica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#como-executar-a-comparacao">Como executar a comparação</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referência da API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Referência da API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline">Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.preprocessing">Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-pre-processamento">Módulo de Pré-processamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.carregar_arquivo"><code class="docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.limpeza_dados"><code class="docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.def_lines_limits"><code class="docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.remocao_incertezas"><code class="docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.id_outliers"><code class="docutils literal notranslate"><span class="pre">id_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.rm_outliers"><code class="docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_standard_scaler"><code class="docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.ranges_terrestres"><code class="docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.analise_cargas"><code class="docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_plot_2D"><code class="docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.hierarchical_clustering">Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id23">Módulo Hierarchical Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.hc_application"><code class="docutils literal notranslate"><span class="pre">hc_application()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.plot_dendrogram"><code class="docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.extr_rot_clusters"><code class="docutils literal notranslate"><span class="pre">extr_rot_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.cluster_info_json"><code class="docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.label_propagation">Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id41">Módulo Label Propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.carregar_info_proximidade"><code class="docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_creation"><code class="docutils literal notranslate"><span class="pre">label_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_propagation"><code class="docutils literal notranslate"><span class="pre">label_propagation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.plot_pca"><code class="docutils literal notranslate"><span class="pre">plot_pca()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.export_svm_dataset"><code class="docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.svm">Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-support-vector-machine-svm">Módulo Support Vector Machine (SVM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.separacao_de_dados"><code class="docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.treinamento_modelo_svm"><code class="docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.avaliacao_modelo"><code class="docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.captura_nomes_exoplanetas"><code class="docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.analise_detalhada_erros"><code class="docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.salvar_resultados_completos"><code class="docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.preparar_features"><code class="docutils literal notranslate"><span class="pre">preparar_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.executar_svm"><code class="docutils literal notranslate"><span class="pre">executar_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.similaridade_terra">Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-analise-de-similaridade-terrestre">Módulo Análise de Similaridade Terrestre</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.diagnostics">Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-diagnosticos">Módulo de Diagnósticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.relatorio_circularidade"><code class="docutils literal notranslate"><span class="pre">relatorio_circularidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.validacao_externa"><code class="docutils literal notranslate"><span class="pre">validacao_externa()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Classificação de Exoplanetas</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">pipeline.svm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para pipeline.svm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo Support Vector Machine (SVM)</span>
+<span class="sd">====================================</span>
+
+<span class="sd">Etapa supervisionada final do pipeline. Treina um classificador SVM (kernel</span>
+<span class="sd">RBF) sobre os pseudo-rótulos gerados pelo Label Propagation e avalia seu</span>
+<span class="sd">desempenho em conjuntos de ajuste (15%) e teste final (10%) estratificados.</span>
+
+<span class="sd">Inclui</span>
+<span class="sd">------</span>
+<span class="sd">- Separação estratificada dos dados em treino (75%), ajuste (15%) e teste (10%)</span>
+<span class="sd">- Treinamento do SVM</span>
+<span class="sd">- Avaliação com matriz de confusão, precision, recall, F1 e acurácia</span>
+<span class="sd">- Captura dos nomes dos exoplanetas do conjunto de teste</span>
+<span class="sd">- Análise detalhada dos erros (VP/VN/FP/FN)</span>
+<span class="sd">- Exportação dos resultados em CSV</span>
+<span class="sd">- Tratamento gracioso do caso degenerado (LP produz apenas uma classe)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">,</span>
+                             <span class="n">confusion_matrix</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_and_show</span><span class="p">(</span><span class="n">fig_name</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper interno: salva figura (se save_dir) e exibe (se show).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">save_dir</span><span class="p">:</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fig_name</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="separacao_de_dados">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.separacao_de_dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">separacao_de_dados</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">rotulos</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">57</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.0 - Separação estratificada dos dados (75 / 15 / 10).</span>
+
+<span class="sd">    Divide o dataset em três subconjuntos preservando a proporção de classes:</span>
+
+<span class="sd">    - Treino: 75% (para ajuste dos parâmetros do SVM)</span>
+<span class="sd">    - Ajuste: 15% (para validação durante desenvolvimento)</span>
+<span class="sd">    - Teste final: 10% (para avaliação final em dados nunca vistos)</span>
+
+<span class="sd">    Os índices originais também são propagados para permitir recuperar os</span>
+<span class="sd">    nomes dos planetas do conjunto de teste.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : array-like ou pandas.DataFrame</span>
+<span class="sd">        Features das amostras.</span>
+<span class="sd">    rotulos : array-like</span>
+<span class="sd">        Vetor de rótulos (0 ou 1).</span>
+<span class="sd">    random_state : int, opcional</span>
+<span class="sd">        Semente para reprodutibilidade (padrão 57).</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_train, X_adj, X_test : array-like</span>
+<span class="sd">        Features para cada conjunto.</span>
+<span class="sd">    y_train, y_adj, y_test : array-like</span>
+<span class="sd">        Rótulos correspondentes.</span>
+<span class="sd">    idx_test : numpy.ndarray</span>
+<span class="sd">        Índices originais das amostras do conjunto de teste.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se alguma classe tiver menos de 2 amostras (impossibilita split</span>
+<span class="sd">        estratificado).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preparando dados para SVM:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Shape: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Distribuição rótulos: </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rotulos</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">contagem</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rotulos</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">contagem</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Distribuição degenerada: classes </span><span class="si">{</span><span class="n">contagem</span><span class="p">[</span><span class="n">contagem</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;têm menos de 2 amostras. SVM supervisionado inviável.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_temp</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">rotulos</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span>
+        <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">rotulos</span>
+    <span class="p">)</span>
+    <span class="n">X_adj</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_adj</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">idx_adj</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">idx_temp</span><span class="p">,</span>
+        <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_temp</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Divisão 75-15-10: Treino=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> | Ajuste=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_adj</span><span class="p">)</span><span class="si">}</span><span class="s2"> | Teste=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_adj</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_adj</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">idx_test</span></div>
+
+
+
+<div class="viewcode-block" id="treinamento_modelo_svm">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.treinamento_modelo_svm">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">treinamento_modelo_svm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">57</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.1 - Treinamento do SVM.</span>
+
+<span class="sd">    Treina um classificador SVM com kernel RBF sobre o conjunto de treino.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train : array-like</span>
+<span class="sd">        Features do conjunto de treino.</span>
+<span class="sd">    y_train : array-like</span>
+<span class="sd">        Rótulos do conjunto de treino.</span>
+<span class="sd">    C : float, opcional</span>
+<span class="sd">        Parâmetro de regularização (padrão 1.0).</span>
+<span class="sd">    gamma : str ou float, opcional</span>
+<span class="sd">        Coeficiente do kernel RBF (padrão ``&#39;scale&#39;``).</span>
+<span class="sd">    random_state : int, opcional</span>
+<span class="sd">        Semente para reprodutibilidade (padrão 57).</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    modelo : sklearn.svm.SVC</span>
+<span class="sd">        Modelo SVM treinado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">modelo</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">modelo</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">modelo</span></div>
+
+
+
+<div class="viewcode-block" id="avaliacao_modelo">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.avaliacao_modelo">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">avaliacao_modelo</span><span class="p">(</span><span class="n">modelo</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">nome_conjunto</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.2 - Avaliação do modelo em um conjunto de dados.</span>
+
+<span class="sd">    Aplica o modelo, gera matriz de confusão, imprime o classification_report</span>
+<span class="sd">    e retorna a acurácia. Aceita conjuntos de ajuste ou teste final.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    modelo : sklearn.svm.SVC</span>
+<span class="sd">        Modelo SVM treinado.</span>
+<span class="sd">    X : array-like</span>
+<span class="sd">        Features do conjunto a avaliar.</span>
+<span class="sd">    y : array-like</span>
+<span class="sd">        Rótulos reais.</span>
+<span class="sd">    nome_conjunto : str</span>
+<span class="sd">        Nome descritivo (aparece no título e nome do PNG).</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Se fornecido, salva matriz de confusão como</span>
+<span class="sd">        ``matriz_confusao_&lt;nome&gt;.png``.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    previsoes : numpy.ndarray</span>
+<span class="sd">        Vetor de previsões do modelo.</span>
+<span class="sd">    matriz : numpy.ndarray</span>
+<span class="sd">        Matriz de confusão 2x2.</span>
+<span class="sd">    acuracia : float</span>
+<span class="sd">        Acurácia calculada.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Avaliação — </span><span class="si">{</span><span class="n">nome_conjunto</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">previsoes</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">matriz</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">previsoes</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matriz</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+                <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Matriz de Confusão - SVM (</span><span class="si">{</span><span class="n">nome_conjunto</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Real&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Predito&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">_save_and_show</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;matriz_confusao_</span><span class="si">{</span><span class="n">nome_conjunto</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
+                   <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Relatório de classificação (</span><span class="si">{</span><span class="n">nome_conjunto</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">previsoes</span><span class="p">,</span>
+                                <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Não-Terrestre&quot;</span><span class="p">,</span> <span class="s2">&quot;Terrestre&quot;</span><span class="p">]))</span>
+    <span class="n">acuracia</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">previsoes</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acurácia: </span><span class="si">{</span><span class="n">acuracia</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">previsoes</span><span class="p">,</span> <span class="n">matriz</span><span class="p">,</span> <span class="n">acuracia</span></div>
+
+
+
+<div class="viewcode-block" id="captura_nomes_exoplanetas">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.captura_nomes_exoplanetas">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">captura_nomes_exoplanetas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">idx_teste</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">previsoes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.3 - Captura dos nomes dos exoplanetas do conjunto de teste.</span>
+
+<span class="sd">    Constrói uma tabela relacionando o nome de cada planeta do conjunto de</span>
+<span class="sd">    teste, seu rótulo real, sua previsão e se a classificação foi correta.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        DataFrame com coluna ``pl_name``.</span>
+<span class="sd">    idx_teste : array-like</span>
+<span class="sd">        Índices posicionais (via ``iloc``) das amostras do conjunto de teste.</span>
+<span class="sd">    y_test : array-like</span>
+<span class="sd">        Rótulos reais do conjunto de teste.</span>
+<span class="sd">    previsoes : array-like</span>
+<span class="sd">        Previsões do modelo.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    tabela : pandas.DataFrame</span>
+<span class="sd">        DataFrame com colunas ``nome_planeta``, ``rotulo_original``,</span>
+<span class="sd">        ``rotulo_predito``, ``previsao_correta``, ``categoria_original``,</span>
+<span class="sd">        ``categoria_predita``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nomes</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx_teste</span><span class="p">][</span><span class="s2">&quot;pl_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">tabela</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;nome_planeta&quot;</span><span class="p">:</span> <span class="n">nomes</span><span class="p">,</span>
+        <span class="s2">&quot;rotulo_original&quot;</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
+        <span class="s2">&quot;rotulo_predito&quot;</span><span class="p">:</span> <span class="n">previsoes</span><span class="p">,</span>
+        <span class="s2">&quot;previsao_correta&quot;</span><span class="p">:</span> <span class="n">y_test</span> <span class="o">==</span> <span class="n">previsoes</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">tabela</span><span class="p">[</span><span class="s2">&quot;categoria_original&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabela</span><span class="p">[</span><span class="s2">&quot;rotulo_original&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;Não-Terrestre&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Terrestre&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">tabela</span><span class="p">[</span><span class="s2">&quot;categoria_predita&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabela</span><span class="p">[</span><span class="s2">&quot;rotulo_predito&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;Não-Terrestre&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Terrestre&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultados finais: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">)</span><span class="si">}</span><span class="s2"> planetas | &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Corretos: </span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="s1">&#39;previsao_correta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> | &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Acurácia: </span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="s1">&#39;previsao_correta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tabela</span></div>
+
+
+
+<div class="viewcode-block" id="analise_detalhada_erros">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.analise_detalhada_erros">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">analise_detalhada_erros</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">matriz</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.4 - Análise detalhada dos erros.</span>
+
+<span class="sd">    Lista os planetas classificados incorretamente e imprime estatísticas</span>
+<span class="sd">    dos verdadeiros/falsos positivos/negativos.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tabela : pandas.DataFrame</span>
+<span class="sd">        Tabela retornada por :func:`captura_nomes_exoplanetas`.</span>
+<span class="sd">    matriz : numpy.ndarray</span>
+<span class="sd">        Matriz de confusão 2x2.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">erros</span> <span class="o">=</span> <span class="n">tabela</span><span class="p">[</span><span class="o">~</span><span class="n">tabela</span><span class="p">[</span><span class="s2">&quot;previsao_correta&quot;</span><span class="p">]]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">erros</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Erros (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">erros</span><span class="p">)</span><span class="si">}</span><span class="s2"> planetas):&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">erros</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;nome_planeta&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30</span><span class="si">}</span><span class="s2"> | Predito=</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;categoria_predita&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;| Real=</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;categoria_original&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Nenhum erro no conjunto de teste.&quot;</span><span class="p">)</span>
+
+    <span class="n">vn</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">matriz</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">matriz</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">fn</span><span class="p">,</span> <span class="n">vp</span> <span class="o">=</span> <span class="n">matriz</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">matriz</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">VP=</span><span class="si">{</span><span class="n">vp</span><span class="si">}</span><span class="s2"> | VN=</span><span class="si">{</span><span class="n">vn</span><span class="si">}</span><span class="s2"> | FP=</span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2"> | FN=</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="salvar_resultados_completos">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.salvar_resultados_completos">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">salvar_resultados_completos</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">acuracia_final</span><span class="p">,</span> <span class="n">caminho_saida</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.9 - Exportação dos resultados detalhados em CSV.</span>
+
+<span class="sd">    Salva um CSV contendo nome do planeta, categoria real, categoria</span>
+<span class="sd">    predita e se a previsão foi correta.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tabela : pandas.DataFrame</span>
+<span class="sd">        Tabela retornada por :func:`captura_nomes_exoplanetas`.</span>
+<span class="sd">    acuracia_final : float</span>
+<span class="sd">        Acurácia obtida no conjunto de teste final (para reporte).</span>
+<span class="sd">    caminho_saida : str</span>
+<span class="sd">        Caminho do arquivo CSV a salvar.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    tabela : pandas.DataFrame</span>
+<span class="sd">        A mesma tabela recebida (para encadeamento).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tabela</span><span class="p">[[</span><span class="s2">&quot;nome_planeta&quot;</span><span class="p">,</span> <span class="s2">&quot;categoria_original&quot;</span><span class="p">,</span> <span class="s2">&quot;categoria_predita&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;previsao_correta&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Salvo: </span><span class="si">{</span><span class="n">caminho_saida</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acurácia final em dados nunca vistos: </span><span class="si">{</span><span class="n">acuracia_final</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tabela</span></div>
+
+
+
+<div class="viewcode-block" id="preparar_features">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.preparar_features">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">preparar_features</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove colunas não-numéricas ou de rótulo para preparar as features do SVM.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        DataFrame carregado da etapa 3.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame apenas com as features padronizadas para o SVM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">excluir</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pl_name&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_hc&quot;</span><span class="p">,</span> <span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">,</span> <span class="s2">&quot;label_lp&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluir</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="executar_svm">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.executar_svm">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">executar_svm</span><span class="p">(</span><span class="n">df_features</span><span class="p">,</span> <span class="n">df_original</span><span class="p">,</span> <span class="n">caminho_saida_csv</span><span class="p">,</span>
+                 <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    5.10 - Pipeline completo do SVM.</span>
+
+<span class="sd">    Encadeia todas as sub-etapas do módulo:</span>
+<span class="sd">    :func:`separacao_de_dados` → :func:`treinamento_modelo_svm` →</span>
+<span class="sd">    :func:`avaliacao_modelo` (ajuste) → :func:`avaliacao_modelo` (teste) →</span>
+<span class="sd">    :func:`captura_nomes_exoplanetas` → :func:`analise_detalhada_erros` →</span>
+<span class="sd">    :func:`salvar_resultados_completos`.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_features : pandas.DataFrame</span>
+<span class="sd">        DataFrame apenas com as features numéricas do SVM.</span>
+<span class="sd">    df_original : pandas.DataFrame</span>
+<span class="sd">        DataFrame completo com ``pl_name`` e ``label_lp``.</span>
+<span class="sd">    caminho_saida_csv : str</span>
+<span class="sd">        Caminho do CSV de resultados finais.</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Diretório para salvar as matrizes de confusão.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    modelo : sklearn.svm.SVC</span>
+<span class="sd">        Modelo treinado.</span>
+<span class="sd">    tabela : pandas.DataFrame</span>
+<span class="sd">        Resultados detalhados do conjunto de teste.</span>
+<span class="sd">    acuracia_final : float</span>
+<span class="sd">        Acurácia no conjunto de teste.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;label_lp&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df_original</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;DataFrame precisa conter a coluna &#39;label_lp&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">rotulos</span> <span class="o">=</span> <span class="n">df_original</span><span class="p">[</span><span class="s2">&quot;label_lp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_adj</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_adj</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">separacao_de_dados</span><span class="p">(</span>
+        <span class="n">df_features</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">rotulos</span>
+    <span class="p">)</span>
+    <span class="n">modelo</span> <span class="o">=</span> <span class="n">treinamento_modelo_svm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="n">avaliacao_modelo</span><span class="p">(</span><span class="n">modelo</span><span class="p">,</span> <span class="n">X_adj</span><span class="p">,</span> <span class="n">y_adj</span><span class="p">,</span> <span class="s2">&quot;Ajuste&quot;</span><span class="p">,</span>
+                     <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+    <span class="n">prev_test</span><span class="p">,</span> <span class="n">matriz_test</span><span class="p">,</span> <span class="n">acc_final</span> <span class="o">=</span> <span class="n">avaliacao_modelo</span><span class="p">(</span>
+        <span class="n">modelo</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&quot;Teste Final&quot;</span><span class="p">,</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+    <span class="p">)</span>
+
+    <span class="n">tabela</span> <span class="o">=</span> <span class="n">captura_nomes_exoplanetas</span><span class="p">(</span><span class="n">df_original</span><span class="p">,</span> <span class="n">idx_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">prev_test</span><span class="p">)</span>
+    <span class="n">analise_detalhada_erros</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">matriz_test</span><span class="p">)</span>
+    <span class="n">salvar_resultados_completos</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">acc_final</span><span class="p">,</span> <span class="n">caminho_saida_csv</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">modelo</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">acc_final</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../modules.html#pipeline.svm.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">,</span> <span class="n">caminho_saida_csv</span><span class="p">,</span>
+         <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Executa toda a etapa 4 (SVM) do pipeline.</span>
+
+<span class="sd">    Trata graciosamente o caso em que o Label Propagation produziu uma</span>
+<span class="sd">    distribuição degenerada de rótulos (uma das classes com &lt; 2 amostras),</span>
+<span class="sd">    retornando ``{&quot;acuracia&quot;: None, &quot;erro&quot;: ...}`` em vez de crashar.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caminho_entrada : str</span>
+<span class="sd">        Caminho do Excel produzido pela etapa 3.</span>
+<span class="sd">    caminho_saida_csv : str</span>
+<span class="sd">        Caminho do CSV de resultados finais.</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Diretório para salvar figuras.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe figuras interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Chaves ``modelo``, ``tabela``, ``acuracia`` (ou ``None`` + ``erro``</span>
+<span class="sd">        se degenerado).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ETAPA 4 — SUPPORT VECTOR MACHINE&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset carregado: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">df_features</span> <span class="o">=</span> <span class="n">preparar_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">modelo</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">executar_svm</span><span class="p">(</span>
+            <span class="n">df_features</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">caminho_saida_csv</span><span class="p">,</span>
+            <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[SVM SALTADO] </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Isso indica que o pipeline anterior produziu uma distribuição &quot;</span>
+              <span class="s2">&quot;de rótulos que não permite classificação supervisionada.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;modelo&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;tabela&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;acuracia&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;erro&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;modelo&quot;</span><span class="p">:</span> <span class="n">modelo</span><span class="p">,</span> <span class="s2">&quot;tabela&quot;</span><span class="p">:</span> <span class="n">tabela</span><span class="p">,</span> <span class="s2">&quot;acuracia&quot;</span><span class="p">:</span> <span class="n">acc</span><span class="p">}</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span>
+        <span class="n">caminho_entrada</span><span class="o">=</span><span class="s2">&quot;../outputs/DFsvm.xlsx&quot;</span><span class="p">,</span>
+        <span class="n">caminho_saida_csv</span><span class="o">=</span><span class="s2">&quot;../outputs/resultados_svm.csv&quot;</span><span class="p">,</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;../outputs/figs&quot;</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2026, Beatriz — Iniciação Científica.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

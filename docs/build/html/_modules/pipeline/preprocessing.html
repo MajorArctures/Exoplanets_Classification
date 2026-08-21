@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pipeline.preprocessing &mdash; Classificação de Exoplanetas v1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=05d536ce"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Classificação de Exoplanetas
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Guias</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introducao.html">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#contexto-do-projeto">Contexto do projeto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#variaveis-utilizadas">Variáveis utilizadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#definicao-operacional-de-terrestre">Definição operacional de “terrestre”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introducao.html#fluxo-do-pipeline">Fluxo do pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../uso.html">Como usar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#instalacao">Instalação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#execucao-via-linha-de-comando">Execução via linha de comando</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#uso-programatico">Uso programático</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#notebooks">Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uso.html#saidas-geradas">Saídas geradas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../colab.html">Executando no Google Colab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#setup-rapido">Setup rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#celula-de-setup">Célula de setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#baixando-resultados-do-colab">Baixando resultados do Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../colab.html#dicas">Dicas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Análises metodológicas</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../circularidade.html">Diagnóstico de circularidade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#quantificacao">Quantificação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#interpretacao">Interpretação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#como-executar">Como executar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#validacao-externa">Validação externa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../circularidade.html#recomendacao-para-reporte">Recomendação para reporte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../outliers.html">Comparação de métodos de detecção de outliers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#motivacao">Motivação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#resultados">Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#classificacao-do-sistema-solar">Classificação do Sistema Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#discussao-por-que-mad-e-o-mais-agressivo">Discussão: por que MAD é o mais agressivo?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#conclusao-metodologica">Conclusão metodológica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../outliers.html#como-executar-a-comparacao">Como executar a comparação</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referência da API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Referência da API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline">Pacote <code class="docutils literal notranslate"><span class="pre">pipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.preprocessing">Módulo <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-pre-processamento">Módulo de Pré-processamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.carregar_arquivo"><code class="docutils literal notranslate"><span class="pre">carregar_arquivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.limpeza_dados"><code class="docutils literal notranslate"><span class="pre">limpeza_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.def_lines_limits"><code class="docutils literal notranslate"><span class="pre">def_lines_limits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.remocao_incertezas"><code class="docutils literal notranslate"><span class="pre">remocao_incertezas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.id_outliers"><code class="docutils literal notranslate"><span class="pre">id_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.rm_outliers"><code class="docutils literal notranslate"><span class="pre">rm_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_standard_scaler"><code class="docutils literal notranslate"><span class="pre">pca_standard_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.ranges_terrestres"><code class="docutils literal notranslate"><span class="pre">ranges_terrestres()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.analise_cargas"><code class="docutils literal notranslate"><span class="pre">analise_cargas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.pca_plot_2D"><code class="docutils literal notranslate"><span class="pre">pca_plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.preprocessing.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.hierarchical_clustering">Módulo <code class="docutils literal notranslate"><span class="pre">hierarchical_clustering</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id23">Módulo Hierarchical Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.hc_application"><code class="docutils literal notranslate"><span class="pre">hc_application()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.plot_dendrogram"><code class="docutils literal notranslate"><span class="pre">plot_dendrogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.scatter_plot_PCA"><code class="docutils literal notranslate"><span class="pre">scatter_plot_PCA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.extr_rot_clusters"><code class="docutils literal notranslate"><span class="pre">extr_rot_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.carregar_ranges_padronizados"><code class="docutils literal notranslate"><span class="pre">carregar_ranges_padronizados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.analise_proximidade_terra"><code class="docutils literal notranslate"><span class="pre">analise_proximidade_terra()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.cluster_info_json"><code class="docutils literal notranslate"><span class="pre">cluster_info_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.hierarchical_clustering.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.label_propagation">Módulo <code class="docutils literal notranslate"><span class="pre">label_propagation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#id41">Módulo Label Propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.carregar_info_proximidade"><code class="docutils literal notranslate"><span class="pre">carregar_info_proximidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_creation"><code class="docutils literal notranslate"><span class="pre">label_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.label_propagation"><code class="docutils literal notranslate"><span class="pre">label_propagation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.plot_pca"><code class="docutils literal notranslate"><span class="pre">plot_pca()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.export_svm_dataset"><code class="docutils literal notranslate"><span class="pre">export_svm_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.label_propagation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.svm">Módulo <code class="docutils literal notranslate"><span class="pre">svm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-support-vector-machine-svm">Módulo Support Vector Machine (SVM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.separacao_de_dados"><code class="docutils literal notranslate"><span class="pre">separacao_de_dados()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.treinamento_modelo_svm"><code class="docutils literal notranslate"><span class="pre">treinamento_modelo_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.avaliacao_modelo"><code class="docutils literal notranslate"><span class="pre">avaliacao_modelo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.captura_nomes_exoplanetas"><code class="docutils literal notranslate"><span class="pre">captura_nomes_exoplanetas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.analise_detalhada_erros"><code class="docutils literal notranslate"><span class="pre">analise_detalhada_erros()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.salvar_resultados_completos"><code class="docutils literal notranslate"><span class="pre">salvar_resultados_completos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.preparar_features"><code class="docutils literal notranslate"><span class="pre">preparar_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.executar_svm"><code class="docutils literal notranslate"><span class="pre">executar_svm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.svm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.similaridade_terra">Módulo <code class="docutils literal notranslate"><span class="pre">similaridade_terra</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-analise-de-similaridade-terrestre">Módulo Análise de Similaridade Terrestre</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.calcular_similaridade_terrestre"><code class="docutils literal notranslate"><span class="pre">calcular_similaridade_terrestre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.similaridade_terra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-pipeline.diagnostics">Módulo <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#modulo-de-diagnosticos">Módulo de Diagnósticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.relatorio_circularidade"><code class="docutils literal notranslate"><span class="pre">relatorio_circularidade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#pipeline.diagnostics.validacao_externa"><code class="docutils literal notranslate"><span class="pre">validacao_externa()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Classificação de Exoplanetas</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">pipeline.preprocessing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para pipeline.preprocessing</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo de Pré-processamento</span>
+<span class="sd">============================</span>
+
+<span class="sd">Pipeline de tratamento dos dados de exoplanetas da base</span>
+<span class="sd">*Planetary Systems Composite Data* (NASA Exoplanet Archive):</span>
+
+<span class="sd">1. Filtragem de colunas relevantes</span>
+<span class="sd">2. Filtragem por limites (pl_*lim ∈ {-1, 0, 1})</span>
+<span class="sd">3. Remoção de linhas com incerteza relativa &gt; 50%</span>
+<span class="sd">4. Identificação e remoção de outliers</span>
+<span class="sd">5. Padronização (StandardScaler) e PCA (2 componentes)</span>
+<span class="sd">6. Cálculo dos ranges terrestres no espaço padronizado</span>
+<span class="sd">7. Análise das cargas fatoriais e visualização</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+
+<span class="n">COLUNAS_NUMERICAS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pl_orbper&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_rade&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_bmasse&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">]</span>
+
+<span class="n">COL_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pl_orbper&quot;</span><span class="p">:</span> <span class="s2">&quot;Período Orbital do Planeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">:</span> <span class="s2">&quot;Semi-eixo Maior da Órbita&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pl_rade&quot;</span><span class="p">:</span> <span class="s2">&quot;Raio do Planeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pl_bmasse&quot;</span><span class="p">:</span> <span class="s2">&quot;Massa do Planeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">:</span> <span class="s2">&quot;Excentricidade Orbital&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_and_show</span><span class="p">(</span><span class="n">fig_name</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper interno: salva figura (se save_dir) e exibe (se show).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">save_dir</span><span class="p">:</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fig_name</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="carregar_arquivo">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.carregar_arquivo">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">carregar_arquivo</span><span class="p">(</span><span class="n">caminho</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    0 - Carregamento da base de dados.</span>
+
+<span class="sd">    Carrega a base *Planetary Systems Composite Data* em formato XLSX ou CSV.</span>
+<span class="sd">    O CSV do NASA Exoplanet Archive vem com header comentado por ``#``,</span>
+<span class="sd">    tratado automaticamente.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caminho : str</span>
+<span class="sd">        Caminho do arquivo Excel (.xlsx) ou CSV (.csv).</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame carregado.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        Se o arquivo não for encontrado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">caminho</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">caminho</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">caminho</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">caminho</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">caminho</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Arquivo não encontrado: </span><span class="si">{</span><span class="n">caminho</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+
+
+
+<div class="viewcode-block" id="limpeza_dados">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.limpeza_dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">limpeza_dados</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1.1 - Remoção das Colunas que não serão utilizadas.</span>
+
+<span class="sd">    Nesta etapa, todas as linhas da planilha são mantidas.</span>
+
+<span class="sd">    Dicionários de variáveis</span>
+<span class="sd">    ------------------------</span>
+<span class="sd">    - pl_name = Nome do Planeta</span>
+<span class="sd">    - pl_orbper = Período Orbital (Dias)</span>
+<span class="sd">    - pl_orbsmax = Semi-eixo Maior da Órbita</span>
+<span class="sd">    - pl_rade = Raio do Planeta</span>
+<span class="sd">    - pl_bmasse = Massa do Planeta</span>
+<span class="sd">    - pl_orbeccen = Excentricidade Orbital</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame processado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">col_checked</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;pl_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pl_orbper&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbpererr1&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbpererr2&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbperlim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbsmaxerr1&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbsmaxerr2&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbsmaxlim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pl_rade&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_radeerr1&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_radeerr2&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_radelim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pl_bmasse&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_bmasseerr1&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_bmasseerr2&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_bmasselim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbeccenerr1&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbeccenerr2&quot;</span><span class="p">,</span> <span class="s2">&quot;pl_orbeccenlim&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">col_checked</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="def_lines_limits">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.def_lines_limits">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">def_lines_limits</span><span class="p">(</span><span class="n">df_columns_filter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1.2 - Remoção das Linhas de limites diferentes de 0, -1 e 1.</span>
+
+<span class="sd">    Nesta etapa, deixam-se apenas as linhas que contêm valores confirmados</span>
+<span class="sd">    ou estimados com precisão e/ou aqueles estimados com grau de incerteza</span>
+<span class="sd">    inferior a 50%.</span>
+
+<span class="sd">    Descrição de variáveis</span>
+<span class="sd">    ----------------------</span>
+<span class="sd">    - pl_orbperlim = Limite da distância máxima da estrela host</span>
+<span class="sd">    - pl_orbsmaxlim = Limite do semi-eixo maior da órbita</span>
+<span class="sd">    - pl_radelim = Limite do raio do planeta</span>
+<span class="sd">    - pl_bmasselim = Limite da massa do planeta</span>
+<span class="sd">    - pl_orbeccenlim = Limite da excentricidade orbital</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_columns_filter : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_lim : pandas.DataFrame</span>
+<span class="sd">        DataFrame processado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">df_columns_filter</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">df_columns_filter</span><span class="p">[</span><span class="s2">&quot;pl_orbperlim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">df_columns_filter</span><span class="p">[</span><span class="s2">&quot;pl_orbsmaxlim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">df_columns_filter</span><span class="p">[</span><span class="s2">&quot;pl_radelim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">df_columns_filter</span><span class="p">[</span><span class="s2">&quot;pl_bmasselim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">df_columns_filter</span><span class="p">[</span><span class="s2">&quot;pl_orbeccenlim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="remocao_incertezas">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.remocao_incertezas">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remocao_incertezas</span><span class="p">(</span><span class="n">df_lines_limits</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1.3 - Remoção das Linhas de alta incerteza.</span>
+
+<span class="sd">    Eliminam-se as linhas que contêm grau de incerteza superior a 50%.</span>
+
+<span class="sd">    Critérios</span>
+<span class="sd">    ---------</span>
+<span class="sd">    - Valores == 0 são considerados precisos, não sendo necessário verificar</span>
+<span class="sd">      incerteza.</span>
+<span class="sd">    - Valores != 0 devem apresentar incerteza relativa ≤ 50%.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_lim : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame processado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df_lines_limits</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span>
+        <span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbperlim&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbper&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbpererr1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbper&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbpererr2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbper&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&amp;</span>
+        <span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmaxlim&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmaxerr1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmaxerr2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&amp;</span>
+        <span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasselim&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasse&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasseerr1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasse&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasseerr2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_bmasse&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&amp;</span>
+        <span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_radelim&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_rade&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_radeerr1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_rade&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_radeerr2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_rade&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&amp;</span>
+        <span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccenlim&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccenerr1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccenerr2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="id_outliers">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.id_outliers">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">id_outliers</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1.4 - Identificação dos Outliers.</span>
+
+<span class="sd">    Gera um boxplot para cada uma das 5 variáveis físicas, permitindo</span>
+<span class="sd">    inspeção visual da distribuição e localização dos outliers.</span>
+
+<span class="sd">    Método</span>
+<span class="sd">    ------</span>
+<span class="sd">    - Define o tamanho da figura (polegadas)</span>
+<span class="sd">    - Remove valores NaN para evitar erros</span>
+<span class="sd">    - Cria um boxplot para cada coluna numérica</span>
+<span class="sd">    - Define um grid para visualização (0.6 = 60% opaco)</span>
+
+<span class="sd">    Critérios</span>
+<span class="sd">    ---------</span>
+<span class="sd">    Cada boxplot sumariza a distribuição dos dados através de:</span>
+<span class="sd">    [Q1 - 1.5×IQR, Q3 + 1.5×IQR], onde IQR = Q3 - Q1.</span>
+
+<span class="sd">    - Linha central: mediana (Q2)</span>
+<span class="sd">    - Caixa: intervalo interquartil (IQR = Q3 - Q1)</span>
+<span class="sd">    - Whiskers: estendem-se até 1.5×IQR após os quartis Q1 e Q3</span>
+<span class="sd">    - Pontos além dos whiskers: outliers estatísticos (valores atípicos)</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_inc_rm : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Se fornecido, salva cada boxplot como PNG neste diretório.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True`` (padrão), exibe os boxplots interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        A função apenas exibe os boxplots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">COLUNAS_NUMERICAS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df_inc_rm</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coluna &#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&#39; não encontrada no DataFrame.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">COLUNAS_NUMERICAS</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Boxplot - </span><span class="si">{</span><span class="n">COL_NAMES</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Valores&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">COL_NAMES</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">_save_and_show</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;boxplot_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rm_outliers">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.rm_outliers">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rm_outliers</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;iqr&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colunas</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1.5 - Identificação das linhas que contém os outliers.</span>
+
+<span class="sd">    Como parte implícita dessa função todas as linhas que contenham valores</span>
+<span class="sd">    NaN (Not a Number) em qualquer uma das variáveis analisadas são</span>
+<span class="sd">    automaticamente removidas do dataset.</span>
+
+<span class="sd">    Métodos disponíveis</span>
+<span class="sd">    -------------------</span>
+<span class="sd">    - **iqr** (padrão, Tukey 1977): remove se ``x &lt; Q1 - k·IQR`` ou</span>
+<span class="sd">      ``x &gt; Q3 + k·IQR``. Threshold padrão ``k=1.5``. Método utilizado no</span>
+<span class="sd">      pipeline original.</span>
+<span class="sd">    - **zscore**: remove se ``|x - μ| / σ &gt; k``. Threshold padrão ``k=3``.</span>
+<span class="sd">    - **mad** (Iglewicz-Hoaglin 1993): modified z-score</span>
+<span class="sd">      ``|0.6745·(x - mediana) / MAD| &gt; k``, onde ``MAD = mediana(|x - mediana|)``.</span>
+<span class="sd">      Threshold padrão ``k=3.5``.</span>
+<span class="sd">    - **none**: apenas dropna, sem remoção estatística.</span>
+
+<span class="sd">    Método (aplicado por variável)</span>
+<span class="sd">    ------------------------------</span>
+<span class="sd">    - Inicializa a condição como True (todos os pontos mantidos por padrão)</span>
+<span class="sd">    - Para cada coluna, calcula os limites conforme o método escolhido</span>
+<span class="sd">    - Atualiza a condição AND para manter apenas pontos DENTRO dos limites</span>
+<span class="sd">    - Filtra o DataFrame original (mantém apenas linhas sem outliers em</span>
+<span class="sd">      NENHUMA das variáveis)</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_inc_rm : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+<span class="sd">    method : {&#39;iqr&#39;, &#39;zscore&#39;, &#39;mad&#39;, &#39;none&#39;}, opcional</span>
+<span class="sd">        Método de detecção. Padrão ``&#39;iqr&#39;``.</span>
+<span class="sd">    threshold : float, opcional</span>
+<span class="sd">        Multiplicador/limite. Se ``None``, usa o padrão de cada método.</span>
+<span class="sd">    colunas : list of str, opcional</span>
+<span class="sd">        Colunas onde aplicar. Se ``None``, usa :data:`COLUNAS_NUMERICAS`.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame filtrado, contendo apenas linhas sem outliers em nenhuma</span>
+<span class="sd">        das variáveis analisadas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">colunas</span> <span class="o">=</span> <span class="n">colunas</span> <span class="ow">or</span> <span class="n">COLUNAS_NUMERICAS</span>
+    <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_inc_rm</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">colunas</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df_clean</span>
+
+    <span class="n">cond</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df_clean</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;iqr&quot;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">threshold</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">1.5</span>
+        <span class="k">for</span> <span class="n">coluna</span> <span class="ow">in</span> <span class="n">colunas</span><span class="p">:</span>
+            <span class="n">Q1</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+            <span class="n">Q3</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+            <span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+            <span class="n">cond</span> <span class="o">&amp;=</span> <span class="p">((</span><span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span> <span class="o">&amp;</span>
+                     <span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;zscore&quot;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">threshold</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">3.0</span>
+        <span class="k">for</span> <span class="n">coluna</span> <span class="ow">in</span> <span class="n">colunas</span><span class="p">:</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">std</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
+            <span class="n">cond</span> <span class="o">&amp;=</span> <span class="n">z</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">k</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mad&quot;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">threshold</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">3.5</span>
+        <span class="k">for</span> <span class="n">coluna</span> <span class="ow">in</span> <span class="n">colunas</span><span class="p">:</span>
+            <span class="n">median</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+            <span class="n">mad</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span> <span class="o">-</span> <span class="n">median</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">mad</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">mad</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1.4826</span>
+                <span class="k">if</span> <span class="n">mad</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+            <span class="n">modified_z</span> <span class="o">=</span> <span class="mf">0.6745</span> <span class="o">*</span> <span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="n">coluna</span><span class="p">]</span> <span class="o">-</span> <span class="n">median</span><span class="p">)</span> <span class="o">/</span> <span class="n">mad</span>
+            <span class="n">cond</span> <span class="o">&amp;=</span> <span class="n">modified_z</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">k</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;method=&#39;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&#39; inválido. Use &#39;iqr&#39;, &#39;zscore&#39;, &#39;mad&#39; ou &#39;none&#39;.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">cond</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="pca_standard_scaler">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.pca_standard_scaler">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pca_standard_scaler</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2 - NORMALIZAÇÃO/PADRONIZAÇÃO DE DADOS.</span>
+
+<span class="sd">    Esta etapa realiza a seleção das variáveis numéricas, a padronização</span>
+<span class="sd">    dos dados utilizando o método StandardScaler e a aplicação da técnica</span>
+<span class="sd">    de redução de dimensionalidade PCA, com foco nos dois primeiros</span>
+<span class="sd">    componentes principais.</span>
+
+<span class="sd">    Método</span>
+<span class="sd">    ------</span>
+<span class="sd">    - Seleção das colunas numéricas</span>
+<span class="sd">    - Aplicação do StandardScaler</span>
+<span class="sd">    - Aplicação do PCA</span>
+<span class="sd">    - Análise da Variância Explicada</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_inc_rm : pandas.DataFrame</span>
+<span class="sd">        DataFrame a ser processado.</span>
+<span class="sd">    n_components : int, opcional</span>
+<span class="sd">        Número de componentes principais. Padrão 2.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_to_hc : pandas.DataFrame</span>
+<span class="sd">        DataFrame com os dados padronizados e reduzidos (PC1, PC2 + 5 vars std).</span>
+<span class="sd">    pca_std : sklearn.decomposition.PCA</span>
+<span class="sd">        Objeto PCA ajustado sobre os dados padronizados.</span>
+<span class="sd">    scaler : sklearn.preprocessing.StandardScaler</span>
+<span class="sd">        Scaler ajustado (necessário para transformar novos dados).</span>
+<span class="sd">    colunas_numericas : list of str</span>
+<span class="sd">        Lista com os nomes das variáveis numéricas utilizadas no PCA.</span>
+<span class="sd">    variancia_pc1 : float</span>
+<span class="sd">        Variância explicada pelo PC1.</span>
+<span class="sd">    variancia_pc2 : float</span>
+<span class="sd">        Variância explicada pelo PC2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_numerico</span> <span class="o">=</span> <span class="n">df_inc_rm</span><span class="p">[</span><span class="n">COLUNAS_NUMERICAS</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="n">df_normalizado</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_numerico</span><span class="p">)</span>
+
+    <span class="n">pca_std</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="n">df_pca</span> <span class="o">=</span> <span class="n">pca_std</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_normalizado</span><span class="p">)</span>
+
+    <span class="n">df_to_hc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_pca</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">df_inc_rm</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">df_std</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_normalizado</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">COLUNAS_NUMERICAS</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df_inc_rm</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">df_to_hc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_to_hc</span><span class="p">,</span> <span class="n">df_std</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">variancia_pc1</span><span class="p">,</span> <span class="n">variancia_pc2</span> <span class="o">=</span> <span class="n">pca_std</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+    <span class="n">variancia_total</span> <span class="o">=</span> <span class="n">variancia_pc1</span> <span class="o">+</span> <span class="n">variancia_pc2</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Análise PCA:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Variância explicada total: </span><span class="si">{</span><span class="n">variancia_total</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  PC1: </span><span class="si">{</span><span class="n">variancia_pc1</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> | PC2: </span><span class="si">{</span><span class="n">variancia_pc2</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_to_hc</span><span class="p">,</span> <span class="n">pca_std</span><span class="p">,</span> <span class="n">scaler</span><span class="p">,</span> <span class="n">COLUNAS_NUMERICAS</span><span class="p">,</span> <span class="n">variancia_pc1</span><span class="p">,</span> <span class="n">variancia_pc2</span></div>
+
+
+
+<div class="viewcode-block" id="ranges_terrestres">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.ranges_terrestres">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ranges_terrestres</span><span class="p">(</span><span class="n">scaler</span><span class="p">,</span> <span class="n">colunas_numericas</span><span class="p">,</span> <span class="n">caminho_rgjson</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    3.4 - Referencial Terrestre no Espaço Padronizado.</span>
+
+<span class="sd">    Define os ranges físicos característicos de planetas terrestres e os</span>
+<span class="sd">    converte para o espaço padronizado (z-score). Persiste em JSON para uso</span>
+<span class="sd">    pelas etapas seguintes.</span>
+
+<span class="sd">    Ranges físicos utilizados</span>
+<span class="sd">    -------------------------</span>
+<span class="sd">    - pl_orbper: 88 – 687 dias (Mercúrio a Marte)</span>
+<span class="sd">    - pl_orbsmax: 0,39 – 1,52 UA</span>
+<span class="sd">    - pl_rade: 0,5 – 1,6 raios terrestres</span>
+<span class="sd">    - pl_bmasse: 1 – 15 massas terrestres</span>
+<span class="sd">    - pl_orbeccen: 0 – 0,25</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scaler : sklearn.preprocessing.StandardScaler</span>
+<span class="sd">        Scaler ajustado aos dados físicos originais.</span>
+<span class="sd">    colunas_numericas : list of str</span>
+<span class="sd">        Lista com os nomes das variáveis numéricas (mesma ordem do scaler).</span>
+<span class="sd">    caminho_rgjson : str</span>
+<span class="sd">        Caminho do arquivo JSON de saída.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    ranges_padronizados : dict</span>
+<span class="sd">        Ranges terrestres no espaço padronizado.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se o scaler não estiver ajustado.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">scaler</span><span class="p">,</span> <span class="s2">&quot;mean_&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scaler precisa estar ajustado antes de usar esta função.&quot;</span><span class="p">)</span>
+
+    <span class="n">ranges_fisicos</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;pl_orbper&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">88</span><span class="p">,</span> <span class="mi">687</span><span class="p">),</span>
+        <span class="s2">&quot;pl_orbsmax&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.39</span><span class="p">,</span> <span class="mf">1.52</span><span class="p">),</span>
+        <span class="s2">&quot;pl_rade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">),</span>
+        <span class="s2">&quot;pl_bmasse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="s2">&quot;pl_orbeccen&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="n">ranges_padronizados</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ranges_fisicos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">colunas_numericas</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">mean_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">ranges_padronizados</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">low</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span><span class="p">,</span> <span class="p">(</span><span class="n">high</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span><span class="p">)</span>
+
+    <span class="n">Path</span><span class="p">(</span><span class="n">caminho_rgjson</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">caminho_rgjson</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">ranges_padronizados</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ranges terrestres no espaço padronizado:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ranges_padronizados</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> – </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ranges_padronizados</span></div>
+
+
+
+<div class="viewcode-block" id="analise_cargas">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.analise_cargas">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">analise_cargas</span><span class="p">(</span><span class="n">pca_std</span><span class="p">,</span> <span class="n">colunas_numericas</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2.7 - Análise das cargas (loadings) e contribuição das variáveis no PCA.</span>
+
+<span class="sd">    Esta etapa calcula as cargas fatoriais (loadings) das variáveis originais</span>
+<span class="sd">    em cada componente principal e estima a contribuição percentual de cada</span>
+<span class="sd">    variável nos dois primeiros componentes (PC1 e PC2). Além disso, é</span>
+<span class="sd">    calculada a contribuição acumulada das três variáveis mais relevantes em</span>
+<span class="sd">    cada componente.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pca_std : sklearn.decomposition.PCA</span>
+<span class="sd">        Objeto PCA já ajustado sobre os dados padronizados.</span>
+<span class="sd">    colunas_numericas : list of str</span>
+<span class="sd">        Lista com os nomes das variáveis numéricas utilizadas no PCA.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_loadings : pandas.DataFrame</span>
+<span class="sd">        Cargas fatoriais das variáveis para PC1 e PC2.</span>
+<span class="sd">    top3_pc1 : pandas.Series</span>
+<span class="sd">        Contribuição das 3 variáveis mais relevantes em PC1.</span>
+<span class="sd">    top3_pc2 : pandas.Series</span>
+<span class="sd">        Contribuição das 3 variáveis mais relevantes em PC2.</span>
+<span class="sd">    soma_top3_pc1 : float</span>
+<span class="sd">        Soma da contribuição das top-3 em PC1.</span>
+<span class="sd">    soma_top3_pc2 : float</span>
+<span class="sd">        Soma da contribuição das top-3 em PC2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loadings</span> <span class="o">=</span> <span class="n">pca_std</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pca_std</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">)</span>
+    <span class="n">df_loadings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">loadings</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">colunas_numericas</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">,</span> <span class="s2">&quot;PC2&quot;</span><span class="p">])</span>
+
+    <span class="n">contrib_pc1</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_loadings</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df_loadings</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">contrib_pc2</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_loadings</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">df_loadings</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">top3_pc1</span> <span class="o">=</span> <span class="n">contrib_pc1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">top3_pc2</span> <span class="o">=</span> <span class="n">contrib_pc2</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_loadings</span><span class="p">,</span> <span class="n">top3_pc1</span><span class="p">,</span> <span class="n">top3_pc2</span><span class="p">,</span> <span class="n">top3_pc1</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">top3_pc2</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="pca_plot_2D">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.pca_plot_2D">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pca_plot_2D</span><span class="p">(</span><span class="n">df_to_hc</span><span class="p">,</span> <span class="n">variancia_pc1</span><span class="p">,</span> <span class="n">variancia_pc2</span><span class="p">,</span>
+                <span class="n">top3_pc1</span><span class="p">,</span> <span class="n">top3_pc2</span><span class="p">,</span> <span class="n">soma_top3_pc1</span><span class="p">,</span> <span class="n">soma_top3_pc2</span><span class="p">,</span>
+                <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2.9 - Visualização do PCA 2D com contribuição acumulada.</span>
+
+<span class="sd">    Esta função cria um gráfico de dispersão 2D com os dados tratados,</span>
+<span class="sd">    incluindo a variância explicada por PC1/PC2 e as top-3 variáveis</span>
+<span class="sd">    contribuidoras nos labels dos eixos.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df_to_hc : pandas.DataFrame</span>
+<span class="sd">        DataFrame contendo os dados (colunas PC1, PC2).</span>
+<span class="sd">    variancia_pc1 : float</span>
+<span class="sd">        Variância explicada pelo PC1.</span>
+<span class="sd">    variancia_pc2 : float</span>
+<span class="sd">        Variância explicada pelo PC2.</span>
+<span class="sd">    top3_pc1 : pandas.Series</span>
+<span class="sd">        Contribuição percentual das três variáveis mais relevantes no PC1.</span>
+<span class="sd">    top3_pc2 : pandas.Series</span>
+<span class="sd">        Contribuição percentual das três variáveis mais relevantes no PC2.</span>
+<span class="sd">    soma_top3_pc1 : float</span>
+<span class="sd">        Soma da contribuição percentual das três variáveis mais relevantes no PC1.</span>
+<span class="sd">    soma_top3_pc2 : float</span>
+<span class="sd">        Soma da contribuição percentual das três variáveis mais relevantes no PC2.</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Se fornecido, salva o gráfico como ``pca_2d.png``.</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        A função apenas exibe/salva o gráfico.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_to_hc</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span> <span class="n">df_to_hc</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;hotpink&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Análise de Componentes Principais (PCA) - Exoplanetas&quot;</span><span class="p">,</span>
+              <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC1 (</span><span class="si">{</span><span class="n">variancia_pc1</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> var.)</span><span class="se">\n</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top3_pc1</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">soma_top3_pc1</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PC2 (</span><span class="si">{</span><span class="n">variancia_pc2</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> var.)</span><span class="se">\n</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top3_pc2</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">soma_top3_pc2</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">_save_and_show</span><span class="p">(</span><span class="s2">&quot;pca_2d.png&quot;</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../modules.html#pipeline.preprocessing.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">,</span> <span class="n">caminho_saida</span><span class="p">,</span> <span class="n">caminho_rgjson</span><span class="p">,</span>
+         <span class="n">outlier_method</span><span class="o">=</span><span class="s2">&quot;iqr&quot;</span><span class="p">,</span> <span class="n">outlier_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">remover_outliers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Executa toda a etapa 1 (pré-processamento) do pipeline.</span>
+
+<span class="sd">    Encadeia as sub-etapas:</span>
+
+<span class="sd">    1. :func:`carregar_arquivo`</span>
+<span class="sd">    2. :func:`limpeza_dados` → :func:`def_lines_limits` → :func:`remocao_incertezas`</span>
+<span class="sd">    3. :func:`id_outliers` → :func:`rm_outliers`</span>
+<span class="sd">    4. :func:`pca_standard_scaler`</span>
+<span class="sd">    5. :func:`ranges_terrestres` e :func:`analise_cargas`</span>
+<span class="sd">    6. :func:`pca_plot_2D`</span>
+
+<span class="sd">    E persiste o DataFrame resultante para a etapa seguinte.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caminho_entrada : str</span>
+<span class="sd">        Caminho do arquivo de entrada (.xlsx ou .csv).</span>
+<span class="sd">    caminho_saida : str</span>
+<span class="sd">        Caminho do Excel de saída (entrada da etapa 2).</span>
+<span class="sd">    caminho_rgjson : str</span>
+<span class="sd">        Caminho do JSON de ranges terrestres padronizados.</span>
+<span class="sd">    outlier_method : {&#39;iqr&#39;, &#39;zscore&#39;, &#39;mad&#39;, &#39;none&#39;}, opcional</span>
+<span class="sd">        Método de detecção de outliers. Padrão ``&#39;iqr&#39;``.</span>
+<span class="sd">    outlier_threshold : float, opcional</span>
+<span class="sd">        Threshold do método. Se ``None``, usa o padrão de cada método.</span>
+<span class="sd">    remover_outliers : bool, opcional</span>
+<span class="sd">        Compatibilidade com API antiga. ``True`` = ``&#39;iqr&#39;``, ``False`` = ``&#39;none&#39;``.</span>
+<span class="sd">    save_dir : str, opcional</span>
+<span class="sd">        Diretório para salvar figuras (PNG).</span>
+<span class="sd">    show : bool, opcional</span>
+<span class="sd">        Se ``True``, exibe figuras interativamente.</span>
+
+<span class="sd">    Retorna</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dicionário com ``df_to_hc``, ``df_sem_outliers``, ``df_original``,</span>
+<span class="sd">        ``scaler``, ``pca_std``, ``colunas_numericas``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">remover_outliers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outlier_method</span> <span class="o">=</span> <span class="s2">&quot;iqr&quot;</span> <span class="k">if</span> <span class="n">remover_outliers</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span>
+
+    <span class="n">label_method</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;iqr&quot;</span><span class="p">:</span> <span class="s2">&quot;IQR (k=1.5)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zscore&quot;</span><span class="p">:</span> <span class="s2">&quot;Z-score (k=3)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mad&quot;</span><span class="p">:</span> <span class="s2">&quot;MAD (k=3.5)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;none&quot;</span><span class="p">:</span> <span class="s2">&quot;nenhum filtro&quot;</span><span class="p">,</span>
+    <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">outlier_method</span><span class="p">,</span> <span class="n">outlier_method</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ETAPA 1 — PRÉ-PROCESSAMENTO  [outliers: </span><span class="si">{</span><span class="n">label_method</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">carregar_arquivo</span><span class="p">(</span><span class="n">caminho_entrada</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset carregado: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> linhas x </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> colunas&quot;</span><span class="p">)</span>
+
+    <span class="n">df_columns_filter</span> <span class="o">=</span> <span class="n">limpeza_dados</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Após seleção de colunas: </span><span class="si">{</span><span class="n">df_columns_filter</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">df_lim</span> <span class="o">=</span> <span class="n">def_lines_limits</span><span class="p">(</span><span class="n">df_columns_filter</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Após filtro de limites: </span><span class="si">{</span><span class="n">df_lim</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">df_inc_rm</span> <span class="o">=</span> <span class="n">remocao_incertezas</span><span class="p">(</span><span class="n">df_lim</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Após remoção de incertezas: </span><span class="si">{</span><span class="n">df_inc_rm</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">id_outliers</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+
+    <span class="n">df_sem_outliers</span> <span class="o">=</span> <span class="n">rm_outliers</span><span class="p">(</span><span class="n">df_inc_rm</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">outlier_method</span><span class="p">,</span>
+                                  <span class="n">threshold</span><span class="o">=</span><span class="n">outlier_threshold</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Após rm_outliers (</span><span class="si">{</span><span class="n">outlier_method</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">df_sem_outliers</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">df_to_hc</span><span class="p">,</span> <span class="n">pca_std</span><span class="p">,</span> <span class="n">scaler</span><span class="p">,</span>
+     <span class="n">colunas_numericas</span><span class="p">,</span> <span class="n">var_pc1</span><span class="p">,</span> <span class="n">var_pc2</span><span class="p">)</span> <span class="o">=</span> <span class="n">pca_standard_scaler</span><span class="p">(</span><span class="n">df_sem_outliers</span><span class="p">)</span>
+
+    <span class="n">df_loadings</span><span class="p">,</span> <span class="n">top3_pc1</span><span class="p">,</span> <span class="n">top3_pc2</span><span class="p">,</span> <span class="n">soma_pc1</span><span class="p">,</span> <span class="n">soma_pc2</span> <span class="o">=</span> <span class="n">analise_cargas</span><span class="p">(</span>
+        <span class="n">pca_std</span><span class="p">,</span> <span class="n">colunas_numericas</span>
+    <span class="p">)</span>
+
+    <span class="n">ranges_terrestres</span><span class="p">(</span><span class="n">scaler</span><span class="p">,</span> <span class="n">colunas_numericas</span><span class="p">,</span> <span class="n">caminho_rgjson</span><span class="p">)</span>
+
+    <span class="n">pca_plot_2D</span><span class="p">(</span><span class="n">df_to_hc</span><span class="p">,</span> <span class="n">var_pc1</span><span class="p">,</span> <span class="n">var_pc2</span><span class="p">,</span>
+                <span class="n">top3_pc1</span><span class="p">,</span> <span class="n">top3_pc2</span><span class="p">,</span> <span class="n">soma_pc1</span><span class="p">,</span> <span class="n">soma_pc2</span><span class="p">,</span>
+                <span class="n">save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+
+    <span class="n">df_to_hc</span><span class="p">[</span><span class="s2">&quot;pl_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_to_hc</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;pl_name&quot;</span><span class="p">]</span>
+
+    <span class="n">Path</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_to_hc</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">caminho_saida</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Salvo: </span><span class="si">{</span><span class="n">caminho_saida</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;df_to_hc&quot;</span><span class="p">:</span> <span class="n">df_to_hc</span><span class="p">,</span>
+        <span class="s2">&quot;df_sem_outliers&quot;</span><span class="p">:</span> <span class="n">df_sem_outliers</span><span class="p">,</span>
+        <span class="s2">&quot;df_original&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span>
+        <span class="s2">&quot;scaler&quot;</span><span class="p">:</span> <span class="n">scaler</span><span class="p">,</span>
+        <span class="s2">&quot;pca_std&quot;</span><span class="p">:</span> <span class="n">pca_std</span><span class="p">,</span>
+        <span class="s2">&quot;colunas_numericas&quot;</span><span class="p">:</span> <span class="n">colunas_numericas</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span>
+        <span class="n">caminho_entrada</span><span class="o">=</span><span class="s2">&quot;../data/PSCompData.xlsx&quot;</span><span class="p">,</span>
+        <span class="n">caminho_saida</span><span class="o">=</span><span class="s2">&quot;../outputs/DFHierarchicalClustering.xlsx&quot;</span><span class="p">,</span>
+        <span class="n">caminho_rgjson</span><span class="o">=</span><span class="s2">&quot;../outputs/ranges_terrestres.json&quot;</span><span class="p">,</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;../outputs/figs&quot;</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2026, Beatriz — Iniciação Científica.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+Introdução
+==========
+
+Contexto do projeto
+-------------------
+
+Este pipeline foi desenvolvido no âmbito de um projeto de Iniciação Científica
+para a classificação automatizada de exoplanetas em duas categorias:
+
+* **TT** — Tipo Terrestre: planetas com características físicas semelhantes à Terra
+* **NT** — Não Terrestre: demais planetas
+
+A base de dados utilizada é a *Planetary Systems Composite Parameters* do
+`NASA Exoplanet Archive <https://exoplanetarchive.ipac.caltech.edu/>`_,
+contendo 5.967 exoplanetas confirmados até julho de 2025.
+
+Variáveis utilizadas
+--------------------
+
+As cinco variáveis físicas utilizadas em todas as etapas do pipeline são:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 50 30
+
+   * - Variável
+     - Descrição
+     - Unidade
+   * - ``pl_orbper``
+     - Período orbital
+     - dias
+   * - ``pl_orbsmax``
+     - Semi-eixo maior da órbita
+     - UA
+   * - ``pl_rade``
+     - Raio do planeta
+     - raios terrestres
+   * - ``pl_bmasse``
+     - Massa do planeta
+     - massas terrestres
+   * - ``pl_orbeccen``
+     - Excentricidade orbital
+     - adimensional
+
+Definição operacional de "terrestre"
+-------------------------------------
+
+O pipeline utiliza uma definição operacional de "terrestre" baseada em faixas
+físicas de referência inspiradas nos limites do Sistema Solar interno:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Variável
+     - Faixa terrestre
+   * - ``pl_orbper``
+     - 88 – 687 dias (Mercúrio a Marte)
+   * - ``pl_orbsmax``
+     - 0,39 – 1,52 UA
+   * - ``pl_rade``
+     - 0,5 – 1,6 raios terrestres
+   * - ``pl_bmasse``
+     - 1 – 15 massas terrestres
+   * - ``pl_orbeccen``
+     - 0 – 0,25
+
+.. note::
+
+   Esta definição é operacionalmente mais restritiva do que a intuição usual
+   de "planeta rochoso": Mercúrio e Marte ficam próximos ou fora da faixa de
+   raio, e ambos têm massas bem abaixo do limite inferior de 1 massa terrestre.
+
+Fluxo do pipeline
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 5 25 40 30
+
+   * - Etapa
+     - Módulo
+     - Descrição
+     - Saída
+   * - 1
+     - :mod:`pipeline.preprocessing`
+     - Filtragem, remoção de outliers, padronização (StandardScaler) e PCA
+     - ``DFHierarchicalClustering.xlsx``
+   * - 2
+     - :mod:`pipeline.hierarchical_clustering`
+     - Agrupamento hierárquico (Ward, 4 clusters), análise de proximidade à Terra
+     - ``DFLabelPropagation.xlsx``
+   * - 3
+     - :mod:`pipeline.label_propagation`
+     - Propagação semi-supervisionada de rótulos TT/NT
+     - ``DFsvm.xlsx``
+   * - 4
+     - :mod:`pipeline.svm`
+     - Classificação supervisionada com SVM (kernel RBF)
+     - ``resultados_svm.csv``
+   * - 5
+     - :mod:`pipeline.similaridade_terra`
+     - Índice contínuo de similaridade com a Terra (0-100%)
+     - ``similaridade_exoplanetas_terra.csv``
+
+Também há um módulo :mod:`pipeline.diagnostics` para análises metodológicas
+(circularidade e validação externa).
