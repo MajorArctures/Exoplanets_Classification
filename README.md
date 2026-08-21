@@ -446,6 +446,8 @@ Undergraduate researcher and student of Technology in Systems Analysis and Devel
 
 This project combines my interests in **data, machine learning, and astronomy**.
 
+Research Advisor: Prof. Dr. Josivan Pereira da Silva
+
 Questions, suggestions, and technical feedback are welcome.
 
 ---
@@ -897,5 +899,7 @@ Consulte [`LICENSE`](LICENSE) para os termos de uso e distribuição deste proje
 Pesquisadora de Iniciação Científica e estudante de Análise e Desenvolvimento de Sistemas.
 
 Este projeto reúne meus interesses em **dados, aprendizado de máquina e astronomia**.
+
+Orientador: Prof. Dr. Josivan Pereira da Silva
 
 Dúvidas, sugestões e feedback técnico são bem-vindos.
